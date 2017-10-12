@@ -1,4 +1,6 @@
 package com.example.nick.melanoma;
+//Credit to developers.google.com for this basic implementation
+//of a Google Login system
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -37,7 +39,7 @@ public class Login extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_screen);
+        setContentView(R.layout.activity_login2);
 
         // Views
         mStatusTextView = (TextView)findViewById(R.id.status);
