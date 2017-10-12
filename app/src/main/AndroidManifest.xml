@@ -37,9 +37,7 @@
             android:name=".ViewProfile"
             android:label="@string/title_activity_view_profile"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Login"
-            android:label="@string/title_activity_login"></activity>
+        <activity android:name=".Login"></activity>
     </application>
 
 </manifest>
