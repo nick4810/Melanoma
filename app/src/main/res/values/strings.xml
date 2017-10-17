@@ -20,5 +20,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="signed_in_fmt">signedInFmt</string>
+    <string name="signed_in_fmt">Successful Sign In</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
 </resources>
