@@ -23,4 +23,14 @@
     <string name="signed_in_fmt">Successful Sign In</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <array name="loggedInList">
+        <item>Home</item>
+        <item>My Info</item>
+        <item>Pictures</item>
+        <item>Log Out</item>
+    </array>
+    <array name="loggedOutList">
+        <item>Home</item>
+        <item>Log In</item>
+    </array>
 </resources>

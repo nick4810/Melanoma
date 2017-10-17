@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/drawer_layout"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.nick.melanoma.MainScreen"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.nick.melanoma.ViewPatients"
+    tools:showIn="@layout/activity_view_patients">
 
-    >
-    <ListView
-        android:id="@+id/navList"
-        android:layout_width="200dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="left"
-        android:background="#ffeeeeee"/>
 
     <Button
         android:id="@+id/goToLogin"
@@ -30,5 +23,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1" />
-</android.support.v4.widget.DrawerLayout>
+
+</android.support.constraint.ConstraintLayout>
 
