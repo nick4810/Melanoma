@@ -27,19 +27,20 @@ class NavigatingActivity extends AppCompatActivity {
 
         //setContentView(R.layout.activity_main_screen);
 
+        //listOps = getResources().getStringArray(R.array.loggedInList);
+        listOps = getResources().getStringArray(R.array.loggedOutList);
+        mDrawerList = (ListView)findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mActivityTitle = getTitle().toString();
 
+        addDrawerItems();
         setupDrawer();
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
 
-        //listOps = getResources().getStringArray(R.array.loggedInList);
-        listOps = getResources().getStringArray(R.array.loggedOutList);
-        mDrawerList = (ListView)findViewById(R.id.navList);
 
-        mActivityTitle = getTitle().toString();
-        addDrawerItems();
     }
 
     private void addDrawerItems() {
