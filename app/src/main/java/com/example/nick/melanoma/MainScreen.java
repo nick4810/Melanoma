@@ -23,12 +23,20 @@ public class MainScreen extends NavigatingActivity  {
         switch (v.getId()) {
             case R.id.goToLogin:
                 goToLogin();
-                break;
+            case R.id.goToCamera:
+                goToCamera();
         }
     }
 
     public void goToLogin() {
         Intent intent = new Intent(this, Login.class);
+        intent.putExtra("LOGGEDIN", loggedIn);
+        startActivity(intent);
+
+    }
+
+    public void goToCamera() {
+        Intent intent = new Intent(this, AddData.class);
         intent.putExtra("LOGGEDIN", loggedIn);
         startActivity(intent);
 

@@ -15,6 +15,19 @@
         tools:context="com.example.nick.melanoma.AddData">
 
 
+        <Button
+            android:id="@+id/takePhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="258dp"
+            android:layout_marginStart="250dp"
+            android:layout_marginTop="450dp"
+            android:onClick="onClick"
+            android:text="Take Photo"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintTop_creator="1" />
     </android.support.constraint.ConstraintLayout>
     <!-- Put what you want as your normal screen in here, you can also choose for a linear layout or any other layout, whatever you prefer -->
 
