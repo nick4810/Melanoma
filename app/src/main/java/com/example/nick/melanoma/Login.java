@@ -43,12 +43,16 @@ public class Login extends NavigatingActivity implements
     private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
 
+    private boolean loggedIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login2);
-        super.onCreateDrawer();
+
+        loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
+
+        super.onCreateDrawer(loggedIn);
 
         // Views
         mStatusTextView = (TextView)findViewById(R.id.status);
@@ -135,38 +139,39 @@ public class Login extends NavigatingActivity implements
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
+            loggedIn=true;
+            super.onCreateDrawer(loggedIn);
             GoogleSignInAccount acct = result.getSignInAccount();
             mStatusTextView.setText(R.string.signed_in_fmt);
             updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
+            loggedIn=false;
+            super.onCreateDrawer(loggedIn);
             updateUI(false);
         }
     }
-    // [END handleSignInResult]
 
-    // [START signIn]
+
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
-    // [END signIn]
 
-    // [START signOut]
+
     private void signOut() {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
-                        // [START_EXCLUDE]
+                        loggedIn=true;
+                        Login.super.onCreateDrawer(loggedIn);
                         updateUI(false);
-                        // [END_EXCLUDE]
                     }
                 });
     }
-    // [END signOut]
 
-    // [START revokeAccess]
+
     private void revokeAccess() {
         Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
@@ -178,7 +183,7 @@ public class Login extends NavigatingActivity implements
                     }
                 });
     }
-    // [END revokeAccess]
+
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {

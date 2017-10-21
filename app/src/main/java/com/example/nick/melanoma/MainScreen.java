@@ -8,11 +8,13 @@ import android.view.View;
 import android.widget.Toast;
 
 public class MainScreen extends NavigatingActivity  {
+    private boolean loggedIn = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
-        super.onCreateDrawer();
+        super.onCreateDrawer(loggedIn);
 
     }
 
@@ -27,6 +29,7 @@ public class MainScreen extends NavigatingActivity  {
 
     public void goToLogin() {
         Intent intent = new Intent(this, Login.class);
+        intent.putExtra("LOGGEDIN", loggedIn);
         startActivity(intent);
 
     }

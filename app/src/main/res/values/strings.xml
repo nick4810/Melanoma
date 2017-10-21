@@ -25,8 +25,8 @@
     <string name="drawer_close">Close navigation drawer</string>
     <array name="loggedInList">
         <item>Home</item>
-        <item>My Info</item>
-        <item>Pictures</item>
+        <item>My Profile</item>
+        <item>My Data</item>
         <item>Log Out</item>
     </array>
     <array name="loggedOutList">

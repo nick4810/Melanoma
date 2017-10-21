@@ -22,22 +22,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AddPatient"
-            android:label="@string/title_activity_add_patient"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ViewPatients"
-            android:label="@string/title_activity_view_patients"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".AddData"
-            android:label="@string/title_activity_add_data"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_add_data" />
         <activity
             android:name=".ViewProfile"
-            android:label="@string/title_activity_view_profile"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Login"></activity>
+            android:label="@string/title_activity_view_profile" />
+        <activity android:name=".Login" />
+        <activity android:name=".ViewData"></activity>
     </application>
 
 </manifest>
