@@ -6,13 +6,13 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
 android:id="@+id/drawer_layout"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-tools:context="com.example.nick.melanoma.Login">
+tools:context="com.capstone.nick.melanoma.Login">
 <!-- The main content view -->
 <android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.nick.melanoma.Login">
+    tools:context="com.capstone.nick.melanoma.Login">
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"

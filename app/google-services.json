@@ -81,6 +81,45 @@
           "status": 1
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:456030486449:android:51a42897c38a5a17",
+        "android_client_info": {
+          "package_name": "com.capstone.nick.melanoma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "456030486449-kejcaj7b7bthccjqov2fl9fajhe840t1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.capstone.nick.melanoma",
+            "certificate_hash": "6608ffeee3b14c3cc83312b392f35b9435ed0eac"
+          }
+        },
+        {
+          "client_id": "456030486449-ftn9m5v0tqd48r8odpccmg2ohe4vmv6s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBtjWqqKTcwoIWNtZHZ8pX9R9D5MkevUU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
     }
   ],
   "configuration_version": "1"

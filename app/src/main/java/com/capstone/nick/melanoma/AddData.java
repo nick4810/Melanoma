@@ -1,4 +1,4 @@
-package com.example.nick.melanoma;
+package com.capstone.nick.melanoma;
 //Credit to https://developer.android.com/training/camera/photobasics.html
 //for the basics of accessing the camera
 import android.content.Intent;
@@ -60,11 +60,8 @@ public class AddData extends AppCompatActivity  {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     takePhoto();
                     // permission was granted
-
                 }
-                return;
             }
-
         }
     }
     public void takePhoto () {
@@ -77,12 +74,11 @@ public class AddData extends AppCompatActivity  {
                 photoFile = createImageFile();
             } catch (IOException ex) {
                 // Error occurred while creating the File
-
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.nick.melanoma",
+                        "com.capstone.nick.melanoma",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);

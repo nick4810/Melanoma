@@ -1,4 +1,4 @@
-package com.example.nick.melanoma;
+package com.capstone.nick.melanoma;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -21,14 +21,18 @@ class NavigatingActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private String mActivityTitle;
 
-    //@Override
-    protected void onCreateDrawer() {
-        //super.onCreate(savedInstanceState);
+    private boolean loggedIn;
 
-        //setContentView(R.layout.activity_main_screen);
+    protected void onCreateDrawer(boolean userLogged) {
+        loggedIn = userLogged;
 
-        //listOps = getResources().getStringArray(R.array.loggedInList);
-        listOps = getResources().getStringArray(R.array.loggedOutList);
+        if(loggedIn){
+            listOps = getResources().getStringArray(R.array.loggedInList);
+
+        } else {
+            listOps = getResources().getStringArray(R.array.loggedOutList);
+        }
+
         mDrawerList = (ListView)findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
@@ -36,10 +40,10 @@ class NavigatingActivity extends AppCompatActivity {
         addDrawerItems();
         setupDrawer();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
-
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
 
     }
 
@@ -58,14 +62,28 @@ class NavigatingActivity extends AppCompatActivity {
 
     private void goToActivity(int numChosen) {
         Intent intent;
-        if(numChosen==0){
-            intent = new Intent(this, MainScreen.class);
-        }else if(numChosen==1) {
-            intent = new Intent(this, ViewProfile.class);
-        }else if(numChosen==2) {
-            intent = new Intent(this, AddData.class);
-        }else {
-            intent = new Intent(this, Login.class);
+        if(loggedIn) {//logged in
+            if (numChosen == 0) {//home
+                intent = new Intent(this, MainScreen.class);
+                intent.putExtra("LOGGEDIN", loggedIn);
+            } else if (numChosen == 1) {//profile
+                intent = new Intent(this, ViewProfile.class);
+                intent.putExtra("LOGGEDIN", loggedIn);
+            } else if (numChosen == 2) {//data
+                intent = new Intent(this, AddData.class);
+                intent.putExtra("LOGGEDIN", loggedIn);
+            } else {//login
+                intent = new Intent(this, Login.class);
+                intent.putExtra("LOGGEDIN", loggedIn);
+            }
+        } else {//not logged in
+            if (numChosen == 0) {//home
+                intent = new Intent(this, MainScreen.class);
+                intent.putExtra("LOGGEDIN", loggedIn);
+            } else {//login
+                intent = new Intent(this, Login.class);
+                intent.putExtra("LOGGEDIN", loggedIn);
+            }
         }
         startActivity(intent);
     }
@@ -77,7 +95,7 @@ class NavigatingActivity extends AppCompatActivity {
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle("Nav Menu");
+                getSupportActionBar().setTitle("Menu");
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
@@ -91,8 +109,6 @@ class NavigatingActivity extends AppCompatActivity {
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
-
-
 
 
     @Override

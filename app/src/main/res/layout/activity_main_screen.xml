@@ -6,13 +6,13 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.nick.melanoma.MainScreen">
+    tools:context="com.capstone.nick.melanoma.MainScreen">
     <!-- The main content view -->
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.example.nick.melanoma.MainScreen">
+        tools:context="com.capstone.nick.melanoma.MainScreen">
 
         <Button
             android:id="@+id/goToLogin"

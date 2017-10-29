@@ -1,11 +1,10 @@
-package com.example.nick.melanoma;
+package com.capstone.nick.melanoma;
 //Credit to Ben Jakuben (http://blog.teamtreehouse.com/add-navigation-drawer-android)
 //for the basic implementation of a navigation drawer
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 public class MainScreen extends NavigatingActivity  {
     private boolean loggedIn = false;

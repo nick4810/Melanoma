@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.nick.melanoma">
+    package="com.capstone.nick.melanoma">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -22,7 +22,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.example.nick.melanoma"
+            android:authorities="com.capstone.nick.melanoma"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -30,7 +30,7 @@
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
 
-        <activity android:name=".MainScreen">
+        <activity android:name="com.capstone.nick.melanoma.MainScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,13 +38,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AddData"
+            android:name="com.capstone.nick.melanoma.AddData"
             android:label="@string/title_activity_add_data" />
         <activity
-            android:name=".ViewProfile"
+            android:name="com.capstone.nick.melanoma.ViewProfile"
             android:label="@string/title_activity_view_profile" />
-        <activity android:name=".Login" />
-        <activity android:name=".ViewData"></activity>
+        <activity android:name="com.capstone.nick.melanoma.Login" />
+        <activity android:name="com.capstone.nick.melanoma.ViewData"></activity>
     </application>
 
 </manifest>
