@@ -1,97 +1,21 @@
 {
   "project_info": {
-    "project_number": "456030486449",
-    "project_id": "firebase-melanoma"
+    "project_number": "960111575797",
+    "firebase_url": "https://idermatoscope.firebaseio.com",
+    "project_id": "idermatoscope",
+    "storage_bucket": "idermatoscope.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:456030486449:android:c531e6831b1a7498",
-        "android_client_info": {
-          "package_name": "nick.melanoma"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "456030486449-c2t9qr3f2a1d0h55097rve2o671anrnb.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "nick.melanoma",
-            "certificate_hash": "6608ffeee3b14c3cc83312b392f35b9435ed0eac"
-          }
-        },
-        {
-          "client_id": "456030486449-ftn9m5v0tqd48r8odpccmg2ohe4vmv6s.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDBtjWqqKTcwoIWNtZHZ8pX9R9D5MkevUU"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 1
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:456030486449:android:301ccf0f7091d0d2",
-        "android_client_info": {
-          "package_name": "com.example.nick.melanoma"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "456030486449-sh7vm8vqc8hnspl70kobqf8htqmu2l53.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.nick.melanoma",
-            "certificate_hash": "6608ffeee3b14c3cc83312b392f35b9435ed0eac"
-          }
-        },
-        {
-          "client_id": "456030486449-ftn9m5v0tqd48r8odpccmg2ohe4vmv6s.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDBtjWqqKTcwoIWNtZHZ8pX9R9D5MkevUU"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 1
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:456030486449:android:51a42897c38a5a17",
+        "mobilesdk_app_id": "1:960111575797:android:51a42897c38a5a17",
         "android_client_info": {
           "package_name": "com.capstone.nick.melanoma"
         }
       },
       "oauth_client": [
         {
-          "client_id": "456030486449-kejcaj7b7bthccjqov2fl9fajhe840t1.apps.googleusercontent.com",
+          "client_id": "960111575797-6cvsu3jluc6n5umas026t00m1l4diihn.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.capstone.nick.melanoma",
@@ -99,13 +23,13 @@
           }
         },
         {
-          "client_id": "456030486449-ftn9m5v0tqd48r8odpccmg2ohe4vmv6s.apps.googleusercontent.com",
+          "client_id": "960111575797-m3s5b3tsqaro7vbh7q19368vckmik8q9.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDBtjWqqKTcwoIWNtZHZ8pX9R9D5MkevUU"
+          "current_key": "AIzaSyAYkdeaMzbHCJtKxeYgkSvxC0sXqz3BxHI"
         }
       ],
       "services": {
@@ -113,11 +37,23 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "960111575797-m3s5b3tsqaro7vbh7q19368vckmik8q9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "960111575797-2qagej9haggfljblpfoe2ej4vhsctam9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "kdr.testG"
+              }
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }
