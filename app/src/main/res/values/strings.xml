@@ -23,6 +23,7 @@
     <string name="signed_in_fmt">Successful Sign In</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="google_sign_up">Sign In With Google</string>
     <array name="loggedInList">
         <item>Home</item>
         <item>My Profile</item>
