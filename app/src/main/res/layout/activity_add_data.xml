@@ -69,12 +69,6 @@
             tools:layout_constraintLeft_creator="1"
             app:layout_constraintLeft_toLeftOf="parent" />
 
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/galleryRecyclerView"
-            android:layout_above="@id/btnCam"
-            />
     </android.support.constraint.ConstraintLayout>
     <!-- Put what you want as your normal screen in here, you can also choose for a linear layout or any other layout, whatever you prefer -->
 

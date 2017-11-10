@@ -308,10 +308,10 @@ public class AddData extends AppCompatActivity {
         loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
 
         Intent intent = getIntent();
-        //String action = intent.getAction();
-        //if (MediaStore.ACTION_IMAGE_CAPTURE.equals(action)) {
-        //    mRequestingAppUri = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
-        //}
+        String action = intent.getAction();
+        if (MediaStore.ACTION_IMAGE_CAPTURE.equals(action)) {
+            mRequestingAppUri = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
+        }
         mActivity = this;
 /*
         createImageGallery();
