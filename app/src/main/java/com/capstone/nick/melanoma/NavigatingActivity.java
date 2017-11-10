@@ -70,7 +70,7 @@ class NavigatingActivity extends AppCompatActivity {
                 intent = new Intent(this, ViewProfile.class);
                 intent.putExtra("LOGGEDIN", loggedIn);
             } else if (numChosen == 2) {//data
-                intent = new Intent(this, AddData.class);
+                intent = new Intent(this, ViewData.class);
                 intent.putExtra("LOGGEDIN", loggedIn);
             } else {//login
                 intent = new Intent(this, Login.class);
@@ -114,11 +114,7 @@ class NavigatingActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Activate the navigation drawer toggle
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return (mDrawerToggle.onOptionsItemSelected(item));
     }
 
     @Override
