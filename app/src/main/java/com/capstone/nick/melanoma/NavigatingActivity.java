@@ -1,4 +1,6 @@
 package com.capstone.nick.melanoma;
+//Credit to Ben Jakuben (http://blog.teamtreehouse.com/add-navigation-drawer-android)
+//for the basic implementation of a navigation drawer
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -75,6 +77,7 @@ class NavigatingActivity extends AppCompatActivity {
             } else {//login
                 intent = new Intent(this, Login.class);
                 intent.putExtra("LOGGEDIN", loggedIn);
+                intent.putExtra("LOGMEOUT", true);
             }
         } else {//not logged in
             if (numChosen == 0) {//home
@@ -83,6 +86,7 @@ class NavigatingActivity extends AppCompatActivity {
             } else {//login
                 intent = new Intent(this, Login.class);
                 intent.putExtra("LOGGEDIN", loggedIn);
+                intent.putExtra("LOGMEOUT", false);
             }
         }
         startActivity(intent);

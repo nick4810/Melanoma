@@ -1,6 +1,5 @@
 package com.capstone.nick.melanoma;
-//Credit to Ben Jakuben (http://blog.teamtreehouse.com/add-navigation-drawer-android)
-//for the basic implementation of a navigation drawer
+
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,25 +19,7 @@ public class MainScreen extends NavigatingActivity  {
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.goToLogin:
-                goToLogin();
-            case R.id.goToCamera:
-                goToCamera();
         }
-    }
-
-    public void goToLogin() {
-        Intent intent = new Intent(this, Login.class);
-        intent.putExtra("LOGGEDIN", loggedIn);
-        startActivity(intent);
-
-    }
-
-    public void goToCamera() {
-        Intent intent = new Intent(this, AddData.class);
-        intent.putExtra("LOGGEDIN", loggedIn);
-        startActivity(intent);
-
     }
 
 }

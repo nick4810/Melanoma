@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -52,12 +53,14 @@ public class Login extends NavigatingActivity implements
         setContentView(R.layout.activity_login2);
 
         loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
+        boolean logMeOut = getIntent().getExtras().getBoolean("LOGMEOUT");
+
 
         super.onCreateDrawer(loggedIn);
         mAuth = FirebaseAuth.getInstance();
 
         // Views
-        mStatusTextView = (TextView)findViewById(R.id.status);
+        mStatusTextView = (TextView) findViewById(R.id.status);
 
         // Button listeners
         findViewById(R.id.sign_in_button).setOnClickListener(this);
@@ -75,6 +78,37 @@ public class Login extends NavigatingActivity implements
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+
+        if (logMeOut){
+            final Intent intent = new Intent(this, Login.class);
+            intent.putExtra("LOGGEDIN", loggedIn);
+            mGoogleApiClient.connect();
+            mGoogleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                @Override
+                public void onConnected(@Nullable Bundle bundle) {
+
+                    FirebaseAuth.getInstance().signOut();
+                    if(mGoogleApiClient.isConnected()) {
+                        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+                            @Override
+                            public void onResult(@NonNull Status status) {
+                                if (status.isSuccess()) {
+                                    Log.d(TAG, "User Logged out");
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onConnectionSuspended(int i) {
+                    Log.d(TAG, "Google API Client Connection Suspended");
+                }
+            });
+        }
+
 
     }
 
@@ -133,6 +167,10 @@ public class Login extends NavigatingActivity implements
             // Google Sign In was successful, authenticate with Firebase
             GoogleSignInAccount account = result.getSignInAccount();
             firebaseAuthWithGoogle(account);
+
+            Intent intent = new Intent(this, ViewData.class);
+            intent.putExtra("LOGGEDIN", loggedIn);
+            startActivity(intent);
         } else {
             // Signed out, show unauthenticated UI.
             loggedIn=false;
