@@ -128,7 +128,7 @@ public class ViewData extends NavigatingActivity {
 
     public void uploadSelected() {
         //? confirm upload
-        
+
         //for(__ in adapter.hashmap)
         //delete/upload
 
