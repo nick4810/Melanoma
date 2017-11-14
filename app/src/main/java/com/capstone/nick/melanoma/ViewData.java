@@ -1,6 +1,9 @@
 package com.capstone.nick.melanoma;
 //Credit to https://www.androidauthority.com/how-to-build-an-image-gallery-app-718976/
 //for implementing a gallery image view
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -64,6 +67,9 @@ public class ViewData extends NavigatingActivity {
                 //for(CreateList c : adapter.galleryList) {
                 //[hashmap]? of ___, chkbox pairs stored in myadapter, chkbox listener adds to hashmap
                 //}
+                for(MyAdapter.ViewHolder view : adapter.imageViews) {
+                    view.chkBox.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -119,20 +125,76 @@ public class ViewData extends NavigatingActivity {
     }
 
     public void delSelected() {
-        //? confirm delete
-        //for(__ in adapter.hashmap)
-        //delete/upload
+        if(adapter.selViews.size()!=0) {
+            AlertDialog.Builder builder;
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
 
-        //remove chkboxes, buttons, etc
+            builder.setTitle("Confirm Selection")
+                    .setMessage("Are you sure you want to delete the selected?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                            //make images not selectable
+                            ImageButton temp = (ImageButton) findViewById(R.id.btnUpload);
+                            temp.setVisibility(View.INVISIBLE);
+                            temp = (ImageButton) findViewById(R.id.btnTrash);
+                            temp.setVisibility(View.INVISIBLE);
+
+                            for (MyAdapter.ViewHolder view : adapter.imageViews) {
+                                view.chkBox.setChecked(false);
+                                view.chkBox.setVisibility(View.INVISIBLE);
+                            }
+                            adapter.selViews.clear();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            //for(__ in adapter.hashmap)
+            //delete/upload
+
+        }
     }
 
     public void uploadSelected() {
-        //? confirm upload
+        if(adapter.selViews.size()!=0) {
+            AlertDialog.Builder builder;
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
 
-        //for(__ in adapter.hashmap)
-        //delete/upload
+            builder.setTitle("Confirm Selection")
+                    .setMessage("Are you sure you want to upload the selected?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with upload
+                            //make images not selectable
+                            ImageButton temp = (ImageButton) findViewById(R.id.btnUpload);
+                            temp.setVisibility(View.INVISIBLE);
+                            temp = (ImageButton) findViewById(R.id.btnTrash);
+                            temp.setVisibility(View.INVISIBLE);
 
-        //remove chkboxes, buttons, etc
+                            for (MyAdapter.ViewHolder view : adapter.imageViews) {
+                                view.chkBox.setChecked(false);
+                                view.chkBox.setVisibility(View.INVISIBLE);
+                            }
+                            adapter.selViews.clear();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+
+            //for(__ in adapter.hashmap)
+            //delete/upload
+
+        }
     }
 
 }

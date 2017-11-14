@@ -12,6 +12,9 @@ public class MainScreen extends NavigatingActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
+
+        if(getIntent().getExtras() !=null)
+            loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
         super.onCreateDrawer(loggedIn);
 
     }

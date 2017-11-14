@@ -16,6 +16,9 @@ import java.util.ArrayList;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private ArrayList<CreateList> galleryList;
     //public hashmap?
+    public ArrayList<ViewHolder> imageViews = new ArrayList<>();
+    public ArrayList<ViewHolder> selViews = new ArrayList<>();
+
     private Context context;
 
     public MyAdapter(Context context, ArrayList<CreateList> galleryList) {
@@ -26,11 +29,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     @Override
     public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_layout, viewGroup, false);
-        return new ViewHolder(view);
+        ViewHolder temp = new ViewHolder(view);
+        imageViews.add(temp);
+        return temp;
     }
 
     @Override
-    public void onBindViewHolder(MyAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(final MyAdapter.ViewHolder viewHolder, int i) {
         viewHolder.title.setText(galleryList.get(i).getImage_title());
         viewHolder.img.setScaleType(ImageView.ScaleType.CENTER_CROP);
         viewHolder.img.setImageResource((galleryList.get(i).getImage_ID()));
@@ -47,6 +52,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context,"Checked",Toast.LENGTH_SHORT).show();
+                selViews.add(viewHolder);
                 //if(!isChecked()) add to list of selected images
             }
         });
@@ -61,7 +67,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder{
         private TextView title;
         private ImageView img;
-        private CheckBox chkBox;
+        public CheckBox chkBox;
         public ViewHolder(View view) {
             super(view);
 
