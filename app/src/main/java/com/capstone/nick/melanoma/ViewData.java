@@ -7,7 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,6 +20,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.File;
 import java.util.ArrayList;
 
 public class ViewData extends NavigatingActivity {
@@ -45,6 +54,8 @@ public class ViewData extends NavigatingActivity {
             R.drawable.ic_action_name,
             R.drawable.ic_action_name2,
     };
+
+    private StorageReference mStorageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +92,9 @@ public class ViewData extends NavigatingActivity {
         ArrayList<CreateList> createLists = prepareData();
         adapter = new MyAdapter(getApplicationContext(), createLists);
         recyclerView.setAdapter(adapter);
+
+        //for firebase storage
+        mStorageRef = FirebaseStorage.getInstance().getReference();
     }
 
     private ArrayList<CreateList> prepareData(){
@@ -134,6 +148,30 @@ public class ViewData extends NavigatingActivity {
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // continue with delete
+                            for (MyAdapter.ViewHolder view : adapter.selViews) {
+                                /*
+                                //delete locally
+                                File dir = getFilesDir();
+                                File file = new File(dir, "my_filename");
+                                boolean deleted = file.delete();
+                                //delete from firebase
+                                // Create a reference to the file to delete
+                                StorageReference desertRef = mStorageRef.child("images/desert.jpg");
+
+                                // Delete the file
+                                desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        // File deleted successfully
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Uh-oh, an error occurred!
+                                    }
+                                });
+                                */
+                            }
                             //make images not selectable
                             ImageButton temp = (ImageButton) findViewById(R.id.btnUpload);
                             temp.setVisibility(View.INVISIBLE);
@@ -170,6 +208,28 @@ public class ViewData extends NavigatingActivity {
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // continue with upload
+                            for (MyAdapter.ViewHolder view : adapter.selViews) {
+                                /*
+                                Uri file = Uri.fromFile(new File("path/to/images/rivers.jpg"));
+                                StorageReference riversRef = mStorageRef.child("images/rivers.jpg");
+
+                                riversRef.putFile(file)
+                                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                // Get a URL to the uploaded content
+                                                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception exception) {
+                                                // Handle unsuccessful uploads
+                                                // ...
+                                            }
+                                        });
+                                        */
+                            }
                             //make images not selectable
                             ImageButton temp = (ImageButton) findViewById(R.id.btnUpload);
                             temp.setVisibility(View.INVISIBLE);
