@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -100,22 +101,28 @@ public class ViewData extends NavigatingActivity {
     private ArrayList<CreateList> prepareData(){
 
         ArrayList<CreateList> theimage = new ArrayList<>();
+/*
         for(int i = 0; i< image_titles.length; i++){
             CreateList createList = new CreateList();
             createList.setImage_title(image_titles[i]);
             createList.setImage_ID(image_ids[i]);
             theimage.add(createList);
         }
-/*
-        String path = Environment.getRootDirectory().toString();//change to path being used
+*/
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString()+"/JPEG Images";//specify path
+
         File f = new File(path);
         File file[] = f.listFiles();
-        for (int i=0; i < file.length; i++) {
-            CreateList createList = new CreateList();
-            createList.setImage_Location(file[i].getName());
-            theimage.add(createList);
+        try {
+            for (int i = 0; i < file.length; i++) {
+                CreateList createList = new CreateList();
+                createList.setImage_title(file[i].getName());
+                theimage.add(createList);
+            }
+        } catch (NullPointerException e) {
+            System.out.println("Null list");
         }
-*/
+
         return theimage;
     }
 

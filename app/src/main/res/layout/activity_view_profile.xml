@@ -49,17 +49,15 @@
         <EditText
             android:id="@+id/editEmail"
             android:layout_width="359dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="293dp"
+            android:layout_height="45dp"
             android:layout_marginTop="11dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="Email"
             android:textColor="#a3a8af"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@+id/editLname"
             app:layout_constraintRight_toRightOf="@+id/editLname"
-            app:layout_constraintTop_toBottomOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/editLname"
             tools:layout_constraintLeft_creator="1"
             tools:layout_constraintRight_creator="1"
             tools:layout_constraintTop_creator="1" />
@@ -149,7 +147,7 @@
 
         <Button
             android:id="@+id/saveDets"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:text="Save Changes"
