@@ -7,8 +7,9 @@
         android:id="@+id/img"
         android:adjustViewBounds="true"
         android:clickable="true"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent" />
+        android:focusable="true"
+        android:layout_height="150dp"
+        android:layout_width="150dp" />
     <TextView
         android:id="@+id/title"
         android:layout_gravity="center"

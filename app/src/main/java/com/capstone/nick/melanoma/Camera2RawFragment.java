@@ -514,11 +514,20 @@ public class Camera2RawFragment extends Fragment
         public void onCaptureStarted(CameraCaptureSession session, CaptureRequest request,
                                      long timestamp, long frameNumber) {
             String currentDateTime = generateTimestamp();
-            File rawFile = new File(Environment.
-                    getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
+
+            File storageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+            File mGalleryFolder = new File(storageDirectory, "JPEG Images");
+            File mRawGalleryFolder = new File(storageDirectory, "Raw Images");
+            if(!mGalleryFolder.exists()) {
+                mGalleryFolder.mkdirs();
+            }
+            if(!mRawGalleryFolder.exists()) {
+                mRawGalleryFolder.mkdirs();
+            }
+
+            File rawFile = new File(mRawGalleryFolder,
                     "RAW_" + currentDateTime + ".dng");
-            File jpegFile = new File(Environment.
-                    getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
+            File jpegFile = new File(mGalleryFolder,
                     "JPEG_" + currentDateTime + ".jpg");
 
             // Look up the ImageSaverBuilder for this request and update it with the file name
@@ -583,6 +592,8 @@ public class Camera2RawFragment extends Fragment
         }
 
     };
+
+
 
     /**
      * A {@link Handler} for showing {@link Toast}s on the UI thread.

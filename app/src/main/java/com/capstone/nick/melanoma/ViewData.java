@@ -109,7 +109,8 @@ public class ViewData extends NavigatingActivity {
             theimage.add(createList);
         }
 */
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString()+"/JPEG Images";//specify path
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/JPEG Images/";//specify path
+        System.out.println(path);
 
         File f = new File(path);
         File file[] = f.listFiles();

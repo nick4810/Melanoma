@@ -2,6 +2,8 @@ package com.capstone.nick.melanoma;
 
 
 import android.content.Context;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
@@ -38,7 +41,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public void onBindViewHolder(final MyAdapter.ViewHolder viewHolder, int i) {
         viewHolder.title.setText(galleryList.get(i).getImage_title());
         viewHolder.img.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        viewHolder.img.setImageResource((galleryList.get(i).getImage_ID()));
+        //viewHolder.img.setImageResource((galleryList.get(i).getImage_ID()));
+        //String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/JPEG Images/";
+        //path+=galleryList.get(i).getImage_title();
+        //File tempFile = new File(path);
+        //viewHolder.img.setImageURI(Uri.fromFile(tempFile));
 
         viewHolder.img.setOnClickListener(new View.OnClickListener() {
             @Override
