@@ -94,7 +94,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * In this example, the lifecycle of a single request to take a photo is:
  * <ul>
  * <li>
- * The user presses the "Picture" button, resulting in a call to {@link #takePicture()}.
+ * The user presses the "Take Picture" button, resulting in a call to {@link #takePicture()}.
  * </li>
  * <li>
  * {@link #takePicture()} initiates a pre-capture sequence that triggers the camera's built-in

@@ -17,9 +17,9 @@
         <EditText
             android:id="@+id/editFname"
             android:layout_width="357dp"
-            android:layout_height="43dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="70dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="25dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="First Name"
@@ -31,7 +31,7 @@
 
         <EditText
             android:id="@+id/editLname"
-            android:layout_width="358dp"
+            android:layout_width="357dp"
             android:layout_height="45dp"
             android:layout_marginTop="11dp"
             android:ems="10"
@@ -48,11 +48,11 @@
 
         <EditText
             android:id="@+id/editEmail"
-            android:layout_width="359dp"
+            android:layout_width="357dp"
             android:layout_height="45dp"
             android:layout_marginTop="11dp"
             android:ems="10"
-            android:inputType="textPersonName"
+            android:inputType="textEmailAddress"
             android:text="Email"
             android:textColor="#a3a8af"
             app:layout_constraintLeft_toLeftOf="@+id/editLname"
@@ -61,23 +61,6 @@
             tools:layout_constraintLeft_creator="1"
             tools:layout_constraintRight_creator="1"
             tools:layout_constraintTop_creator="1" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="198dp"
-            android:layout_marginTop="8dp"
-            android:text="Profile"
-            android:textColor="#000000"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toTopOf="@+id/radioGender"
-            app:layout_constraintHorizontal_bias="0.501"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_constraintLeft_creator="1"
-            tools:layout_constraintRight_creator="1" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline2"
@@ -116,13 +99,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView">
+            app:layout_constraintTop_toBottomOf="@+id/editEmail">
 
             <RadioButton
                 android:id="@+id/toggleMale"
                 android:layout_width="136dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="26dp"
                 android:text="Male"
                 app:layout_constraintLeft_toLeftOf="parent"

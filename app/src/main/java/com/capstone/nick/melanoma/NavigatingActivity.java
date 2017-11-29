@@ -75,7 +75,7 @@ class NavigatingActivity extends AppCompatActivity {
                 intent = new Intent(this, ViewData.class);
                 intent.putExtra("LOGGEDIN", loggedIn);
             } else {//login
-                intent = new Intent(this, Login.class);
+                intent = new Intent(this, MainScreen.class);
                 intent.putExtra("LOGGEDIN", loggedIn);
                 intent.putExtra("LOGMEOUT", true);
             }
@@ -84,9 +84,8 @@ class NavigatingActivity extends AppCompatActivity {
                 intent = new Intent(this, MainScreen.class);
                 intent.putExtra("LOGGEDIN", loggedIn);
             } else {//login
-                intent = new Intent(this, Login.class);
+                intent = new Intent(this, NewUser.class);
                 intent.putExtra("LOGGEDIN", loggedIn);
-                intent.putExtra("LOGMEOUT", false);
             }
         }
         startActivity(intent);

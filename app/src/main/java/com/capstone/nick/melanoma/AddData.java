@@ -17,8 +17,8 @@ package com.capstone.nick.melanoma;
  */
 
 
-        import android.app.Activity;
-        import android.os.Bundle;
+import android.app.Activity;
+import android.os.Bundle;
 
 /**
  * Activity displaying a fragment that implements RAW photo captures.
