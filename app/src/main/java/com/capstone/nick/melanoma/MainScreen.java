@@ -1,6 +1,4 @@
 package com.capstone.nick.melanoma;
-//Credit to developers.google.com for this basic implementation
-//of a Google Login system
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -31,6 +29,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 /**
  * Activity to demonstrate basic retrieval of the Google user's ID, email address, and basic
  * profile.
+ * Credit to developers.google.com for this basic implementation
+ * of a Google Login system
  */
 public class MainScreen extends NavigatingActivity implements
         GoogleApiClient.OnConnectionFailedListener,
@@ -40,7 +40,7 @@ public class MainScreen extends NavigatingActivity implements
     private static final int RC_SIGN_IN = 9001;
 
     private GoogleApiClient mGoogleApiClient;
-    private TextView mStatusTextView;
+    //private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
     private FirebaseAuth mAuth;
 
@@ -63,7 +63,7 @@ public class MainScreen extends NavigatingActivity implements
         mAuth = FirebaseAuth.getInstance();
 
         // Views
-        mStatusTextView = (TextView) findViewById(R.id.status);
+        //mStatusTextView = (TextView) findViewById(R.id.status);
 
         // Button listeners
         findViewById(R.id.sign_in_button).setOnClickListener(this);
@@ -165,7 +165,7 @@ public class MainScreen extends NavigatingActivity implements
             // Signed in successfully, show authenticated UI.
             loggedIn=true;
             super.onCreateDrawer(loggedIn);
-            mStatusTextView.setText(R.string.signed_in_fmt);
+            //mStatusTextView.setText(R.string.signed_in_fmt);
             updateUI(true);
             // Google Sign In was successful, authenticate with Firebase
             GoogleSignInAccount account = result.getSignInAccount();
@@ -294,7 +294,7 @@ public class MainScreen extends NavigatingActivity implements
         if (signedIn) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
         } else {
-            mStatusTextView.setText(R.string.signed_out);
+            //mStatusTextView.setText(R.string.signed_out);
 
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
         }

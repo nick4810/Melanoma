@@ -518,6 +518,10 @@ public class Camera2RawFragment extends Fragment
             File storageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
             File mGalleryFolder = new File(storageDirectory, "JPEG Images");
             File mRawGalleryFolder = new File(storageDirectory, "Raw Images");
+            /*TODO
+            ** instead of single directory, create sub directories separated by username
+            ** load that directory in ViewData*/
+
             if(!mGalleryFolder.exists()) {
                 mGalleryFolder.mkdirs();
             }

@@ -72,7 +72,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView title;
+        public TextView title;
         private ImageView img;
         public CheckBox chkBox;
         public ViewHolder(View view) {

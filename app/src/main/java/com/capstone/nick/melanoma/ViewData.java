@@ -35,29 +35,12 @@ public class ViewData extends NavigatingActivity {
 
     private MyAdapter adapter;
 
-    private final String image_titles[] = {
-            "Img1",
-            "Img2",/*
-            "Img3",
-            "Img4",
-            "Img5",
-            "Img6",
-            "Img7",
-            "Img8",
-            "Img9",
-            "Img10",
-            "Img11",
-            "Img12",
-            "Img13",*/
-    };
-
-    private final Integer image_ids[] = {
-            R.drawable.ic_action_name,
-            R.drawable.ic_action_name2,
-    };
-
     private StorageReference mStorageRef;
 
+    /*TODO
+    ** need an efficient way to load thumbnails
+    ** change title(s) of activity(s)
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -217,11 +200,16 @@ public class ViewData extends NavigatingActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             // continue with upload
                             for (MyAdapter.ViewHolder view : adapter.selViews) {
-                                /*
-                                Uri file = Uri.fromFile(new File("path/to/images/rivers.jpg"));
-                                StorageReference riversRef = mStorageRef.child("images/rivers.jpg");
+                                /*TODO customize directory to user-specific
+                                **check for internet connection, create queue
+                                */
+                                String filename = "RAW";
+                                filename+=view.title.getText().toString().substring(4, view.title.length()-3)+"dng";
 
-                                riversRef.putFile(file)
+                                final Uri file = Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/Raw Images/"+filename));
+                                StorageReference fileRef = mStorageRef.child("Raw Images/"+filename);
+
+                                fileRef.putFile(file)
                                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                             @Override
                                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -236,7 +224,7 @@ public class ViewData extends NavigatingActivity {
                                                 // ...
                                             }
                                         });
-                                        */
+
                             }
                             //make images not selectable
                             ImageButton temp = (ImageButton) findViewById(R.id.btnUpload);

@@ -14,7 +14,9 @@ public class NewUser extends NavigatingActivity {
         loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
         boolean logMeOut = getIntent().getExtras().getBoolean("LOGMEOUT");
 
-
+        /*TODO
+        ** create a questionnaire for new users, load data submitted into database
+         */
         super.onCreateDrawer(loggedIn);
     }
 }
