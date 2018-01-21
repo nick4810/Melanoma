@@ -14,6 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -25,6 +26,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import static com.google.android.gms.common.SignInButton.COLOR_DARK;
+import static com.google.android.gms.common.SignInButton.SIZE_WIDE;
 
 /**
  * Activity to demonstrate basic retrieval of the Google user's ID, email address, and basic
@@ -57,6 +61,9 @@ public class MainScreen extends NavigatingActivity implements
             loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
             logMeOut = getIntent().getExtras().getBoolean("LOGMEOUT");
         }
+
+        SignInButton signInButton = (SignInButton)findViewById(R.id.sign_in_button);
+        signInButton.setStyle(SIZE_WIDE, COLOR_DARK);
 
 
         super.onCreateDrawer(loggedIn);
@@ -168,11 +175,12 @@ public class MainScreen extends NavigatingActivity implements
             //mStatusTextView.setText(R.string.signed_in_fmt);
             updateUI(true);
             // Google Sign In was successful, authenticate with Firebase
-            GoogleSignInAccount account = result.getSignInAccount();
+            GoogleSignInAccount account = result.getSignInAccount(); //account of logged in user
             firebaseAuthWithGoogle(account);
 
             Intent intent = new Intent(this, ViewData.class);
             intent.putExtra("LOGGEDIN", loggedIn);
+            intent.putExtra("EMAIL", account.getEmail());
             startActivity(intent);
         } else {
             // Signed out, show unauthenticated UI.
@@ -309,6 +317,10 @@ public class MainScreen extends NavigatingActivity implements
             case R.id.sign_out_button:
                 signOut();
                 break;
+            case R.id.btn_newUser:
+                Intent intent = new Intent(this, NewUser.class);
+                intent.putExtra("LOGGEDIN", loggedIn);
+                startActivity(intent);
         }
     }
 }

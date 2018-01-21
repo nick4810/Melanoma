@@ -2,6 +2,11 @@ package com.capstone.nick.melanoma;
 
 import android.os.Bundle;
 
+import com.google.android.gms.common.SignInButton;
+
+import static com.google.android.gms.common.SignInButton.COLOR_DARK;
+import static com.google.android.gms.common.SignInButton.SIZE_WIDE;
+
 public class NewUser extends NavigatingActivity {
 
     private boolean loggedIn;
@@ -18,5 +23,10 @@ public class NewUser extends NavigatingActivity {
         ** create a questionnaire for new users, load data submitted into database
          */
         super.onCreateDrawer(loggedIn);
+
+        SignInButton signInButton = (SignInButton)findViewById(R.id.sign_in_button);
+        signInButton.setStyle(SIZE_WIDE, COLOR_DARK);
     }
+
+
 }

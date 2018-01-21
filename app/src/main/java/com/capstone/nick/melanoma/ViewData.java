@@ -32,6 +32,7 @@ import java.util.ArrayList;
 
 public class ViewData extends NavigatingActivity {
     private boolean loggedIn;
+    private String userEmail;
 
     private MyAdapter adapter;
 
@@ -47,6 +48,7 @@ public class ViewData extends NavigatingActivity {
         setContentView(R.layout.activity_view_data);
 
         loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
+        userEmail = getIntent().getExtras().getString("EMAIL");
         super.onCreateDrawer(loggedIn);
 
         final TextView selText = (TextView)findViewById(R.id.SelectText);
@@ -92,7 +94,7 @@ public class ViewData extends NavigatingActivity {
             theimage.add(createList);
         }
 */
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/JPEG Images/";//specify path
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/JPEG Images/"+userEmail+"/";//specify path
         System.out.println(path);
 
         File f = new File(path);

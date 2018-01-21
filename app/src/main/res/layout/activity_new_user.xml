@@ -1,27 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
+    android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.capstone.nick.melanoma.NewUser">
     <!-- The main content view -->
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.capstone.nick.melanoma.NewUser">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New User Questionnaire"
-            tools:layout_editor_absoluteX="118dp"
-            tools:layout_editor_absoluteY="107dp" />
-    </android.support.constraint.ConstraintLayout>
+            android:layout_marginStart="5dp"
+            android:textSize="18sp"
+            android:textColor="@color/text_BLK"
+            android:text="Date Of Birth" />
+
+        <EditText
+        android:id="@+id/editText3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:ems="10"
+        android:inputType="date"
+        tools:layout_editor_absoluteX="39dp"
+        tools:layout_editor_absoluteY="120dp" />
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:layout_marginStart="15dp">
+
+        <RadioButton
+            android:id="@+id/radioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Male"
+            tools:layout_editor_absoluteX="55dp"
+            tools:layout_editor_absoluteY="194dp" />
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Female"
+            tools:layout_editor_absoluteX="153dp"
+            tools:layout_editor_absoluteY="194dp" />
+    </RadioGroup>
+
+
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="25dp">
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/text_BLK"
+            android:text="Ethnicity"
+            tools:layout_editor_absoluteX="38dp"
+            tools:layout_editor_absoluteY="246dp" />
+        <RadioButton
+            android:id="@+id/radioButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Caucasian/White"
+            tools:layout_editor_absoluteX="38dp"
+            tools:layout_editor_absoluteY="279dp" />
+
+        <RadioButton
+            android:id="@+id/radioButton4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="African American/Black"
+            tools:layout_editor_absoluteX="31dp"
+            tools:layout_editor_absoluteY="320dp" />
+
+        <RadioButton
+            android:id="@+id/radioButton5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Asian"
+            tools:layout_editor_absoluteX="163dp"
+            tools:layout_editor_absoluteY="279dp" />
+
+        <RadioButton
+            android:id="@+id/radioButton6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hispanic"
+            tools:layout_editor_absoluteX="163dp"
+            tools:layout_editor_absoluteY="279dp" />
+
+        <RadioButton
+            android:id="@+id/radioButton7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Prefer Not To Answer"
+            tools:layout_editor_absoluteX="163dp"
+            tools:layout_editor_absoluteY="279dp" />
+
+        <RadioButton
+            android:id="@+id/radioButton8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Other"
+            tools:layout_editor_absoluteX="163dp"
+            tools:layout_editor_absoluteY="279dp" />
+    </RadioGroup>
+
+        <EditText
+            android:id="@+id/editText5"
+            android:layout_width="214dp"
+            android:layout_height="130dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="20dp"
+            android:ems="8"
+            android:text="Include any other info here"
+            android:textSize="14sp"
+            android:inputType="textMultiLine"
+            tools:layout_editor_absoluteX="40dp"
+            tools:layout_editor_absoluteY="365dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="25dp"
+                android:textColor="@color/text_BLK"
+                android:text="Complete Your Registration With A Google Account" />
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/sign_in_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="15dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/guideline"
+                app:layout_constraintTop_toBottomOf="@+id/existingUser">
+
+            </com.google.android.gms.common.SignInButton>
+
+
+        </LinearLayout>
+    </ScrollView>
     <!-- Put what you want as your normal screen in here, you can also choose for a linear layout or any other layout, whatever you prefer -->
 
     <!-- The navigation drawer -->
