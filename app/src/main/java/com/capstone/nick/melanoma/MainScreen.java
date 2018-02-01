@@ -51,6 +51,7 @@ public class MainScreen extends NavigatingActivity implements
 
     private boolean loggedIn = false;
     private boolean logMeOut = false;
+    private String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +61,14 @@ public class MainScreen extends NavigatingActivity implements
         if(getIntent().getExtras() !=null) {
             loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
             logMeOut = getIntent().getExtras().getBoolean("LOGMEOUT");
+            userEmail = getIntent().getExtras().getString("EMAIL");
         }
 
         SignInButton signInButton = (SignInButton)findViewById(R.id.sign_in_button);
         signInButton.setStyle(SIZE_WIDE, COLOR_DARK);
 
 
-        super.onCreateDrawer(loggedIn);
+        super.onCreateDrawer(loggedIn, userEmail);
         mAuth = FirebaseAuth.getInstance();
 
         // Views
@@ -171,7 +173,7 @@ public class MainScreen extends NavigatingActivity implements
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             loggedIn=true;
-            super.onCreateDrawer(loggedIn);
+            super.onCreateDrawer(loggedIn, userEmail);
             //mStatusTextView.setText(R.string.signed_in_fmt);
             updateUI(true);
             // Google Sign In was successful, authenticate with Firebase
@@ -185,7 +187,7 @@ public class MainScreen extends NavigatingActivity implements
         } else {
             // Signed out, show unauthenticated UI.
             loggedIn=false;
-            super.onCreateDrawer(loggedIn);
+            super.onCreateDrawer(loggedIn, userEmail);
             updateUI(false);
         }
     }
@@ -247,7 +249,7 @@ public class MainScreen extends NavigatingActivity implements
                     @Override
                     public void onResult(Status status) {
                         loggedIn=true;
-                        MainScreen.super.onCreateDrawer(loggedIn);
+                        MainScreen.super.onCreateDrawer(loggedIn, userEmail);
                         updateUI(false);
                     }
                 });

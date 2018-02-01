@@ -24,9 +24,11 @@ class NavigatingActivity extends AppCompatActivity {
     private String mActivityTitle;
 
     private boolean loggedIn;
+    private String email;
 
-    protected void onCreateDrawer(boolean userLogged) {
+    protected void onCreateDrawer(boolean userLogged, String userEmail) {
         loggedIn = userLogged;
+        email = userEmail;
 
         if(loggedIn){
             listOps = getResources().getStringArray(R.array.loggedInList);
@@ -68,24 +70,30 @@ class NavigatingActivity extends AppCompatActivity {
             if (numChosen == 0) {//home
                 intent = new Intent(this, MainScreen.class);
                 intent.putExtra("LOGGEDIN", loggedIn);
+                intent.putExtra("EMAIL", email);
             } else if (numChosen == 1) {//profile
                 intent = new Intent(this, ViewProfile.class);
                 intent.putExtra("LOGGEDIN", loggedIn);
+                intent.putExtra("EMAIL", email);
             } else if (numChosen == 2) {//data
                 intent = new Intent(this, ViewData.class);
                 intent.putExtra("LOGGEDIN", loggedIn);
-            } else {//login
+                intent.putExtra("EMAIL", email);
+            } else {//log out
                 intent = new Intent(this, MainScreen.class);
                 intent.putExtra("LOGGEDIN", loggedIn);
+                intent.putExtra("EMAIL", email);
                 intent.putExtra("LOGMEOUT", true);
             }
         } else {//not logged in
             if (numChosen == 0) {//home
                 intent = new Intent(this, MainScreen.class);
                 intent.putExtra("LOGGEDIN", loggedIn);
+                intent.putExtra("EMAIL", email);
             } else {//login
                 intent = new Intent(this, NewUser.class);
                 intent.putExtra("LOGGEDIN", loggedIn);
+                intent.putExtra("EMAIL", email);
             }
         }
         startActivity(intent);

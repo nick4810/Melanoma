@@ -24,14 +24,17 @@ import android.os.Bundle;
  * Activity displaying a fragment that implements RAW photo captures.
  */
 public class AddData extends Activity {
+    String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_data);
+
+        userEmail = getIntent().getExtras().getString("EMAIL");
         if (null == savedInstanceState) {
             getFragmentManager().beginTransaction()
-                    .replace(R.id.container, Camera2RawFragment.newInstance())
+                    .replace(R.id.container, Camera2RawFragment.newInstance(userEmail))
                     .commit();
         }
     }

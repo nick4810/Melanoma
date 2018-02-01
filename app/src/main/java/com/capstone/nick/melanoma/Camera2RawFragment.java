@@ -127,6 +127,8 @@ public class Camera2RawFragment extends Fragment
      */
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
+    private String userEmail;
+
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 0);
         ORIENTATIONS.append(Surface.ROTATION_90, 90);
@@ -516,10 +518,10 @@ public class Camera2RawFragment extends Fragment
             String currentDateTime = generateTimestamp();
 
             File storageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-            File mGalleryFolder = new File(storageDirectory, "JPEG Images");
-            //mGalleryFolder = new File(mGalleryFolder, "username");
-            File mRawGalleryFolder = new File(storageDirectory, "Raw Images");
-            //mRawGalleryFolder = new File(mRawGalleryFolder, "username");
+            File mGalleryFolder = new File(storageDirectory, userEmail);
+            mGalleryFolder = new File(mGalleryFolder, "JPEG Images");
+            File mRawGalleryFolder = new File(storageDirectory, userEmail);
+            mRawGalleryFolder = new File(mRawGalleryFolder, "Raw Images");
             /*TODO
             ** instead of single directory, create sub directories separated by username
             ** load that directory in ViewData*/
@@ -614,8 +616,13 @@ public class Camera2RawFragment extends Fragment
         }
     };
 
-    public static Camera2RawFragment newInstance() {
-        return new Camera2RawFragment();
+    public static Camera2RawFragment newInstance(String userEmail) {
+        Camera2RawFragment c = new Camera2RawFragment();
+        Bundle bdl = new Bundle(1);
+        bdl.putString("EMAIL", userEmail);
+        c.setArguments(bdl);
+
+        return c;
     }
 
     @Override
@@ -626,6 +633,7 @@ public class Camera2RawFragment extends Fragment
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
+        userEmail = getArguments().getString("EMAIL");
         view.findViewById(R.id.picture).setOnClickListener(this);
         view.findViewById(R.id.info).setOnClickListener(this);
         mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);

@@ -49,7 +49,7 @@ public class ViewData extends NavigatingActivity {
 
         loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
         userEmail = getIntent().getExtras().getString("EMAIL");
-        super.onCreateDrawer(loggedIn);
+        super.onCreateDrawer(loggedIn, userEmail);
 
         final TextView selText = (TextView)findViewById(R.id.SelectText);
         selText.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +94,7 @@ public class ViewData extends NavigatingActivity {
             theimage.add(createList);
         }
 */
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/JPEG Images/"+userEmail+"/";//specify path
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/JPEG Images/";//specify path
         System.out.println(path);
 
         File f = new File(path);
@@ -125,8 +125,10 @@ public class ViewData extends NavigatingActivity {
     }
 
     public void addData() {
-        Intent intent = new Intent(this, AddData.class);
+        //Intent intent = new Intent(this, AddData.class);
+        Intent intent = new Intent(this, BodySelect.class);
         intent.putExtra("LOGGEDIN", loggedIn);
+        intent.putExtra("EMAIL", userEmail);
         startActivity(intent);
 
     }
@@ -202,14 +204,15 @@ public class ViewData extends NavigatingActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             // continue with upload
                             for (MyAdapter.ViewHolder view : adapter.selViews) {
-                                /*TODO customize directory to user-specific
+                                /*TODO
                                 **check for internet connection, create queue
                                 */
                                 String filename = "RAW";
                                 filename+=view.title.getText().toString().substring(4, view.title.length()-3)+"dng";
 
-                                final Uri file = Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/Raw Images/"+filename));
-                                StorageReference fileRef = mStorageRef.child("Raw Images/"+filename);
+                                final Uri file = Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename));
+                                StorageReference fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename);
+                                System.out.println(fileRef.toString());
 
                                 fileRef.putFile(file)
                                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

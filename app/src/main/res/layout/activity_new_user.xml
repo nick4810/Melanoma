@@ -146,11 +146,12 @@
                 android:text="Complete Your Registration With A Google Account" />
 
             <com.google.android.gms.common.SignInButton
-                android:id="@+id/sign_in_button"
+                android:id="@+id/sign_in_button_newUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:layout_marginStart="15dp"
+                android:onClick="onClick"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/guideline"
                 app:layout_constraintTop_toBottomOf="@+id/existingUser">
