@@ -1,11 +1,13 @@
 package com.capstone.nick.melanoma;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 public class ImageDetails extends NavigatingActivity {
     private boolean loggedIn;
     private String userEmail;
+    private String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -14,6 +16,10 @@ public class ImageDetails extends NavigatingActivity {
 
         userEmail = getIntent().getExtras().getString("EMAIL");
         loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
+        location = getIntent().getExtras().getString("LOCATION");
         super.onCreateDrawer(loggedIn, userEmail);
+
+        Spinner mySpinner = (Spinner)findViewById(R.id.img_location);
+        mySpinner.setSelection(((ArrayAdapter)mySpinner.getAdapter()).getPosition(location));
     }
 }

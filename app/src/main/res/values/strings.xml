@@ -10,6 +10,7 @@
     <string name="account_new">New user? Just give us some basic information.</string>
     <string name="drawer_close">Closing Navigation Drawer</string>
     <string name="drawer_open">Opening Navigation Drawer</string>
+
     <string name="title_activity_add_data">Add a Picture</string>
     <array name="loggedInList">
         <item>Home</item>
@@ -21,4 +22,26 @@
         <item>Home</item>
         <item>Sign Up</item>
     </array>
+
+    <!-- Strings for body location -->
+    <string-array name="locations_array">
+        <item>Right Hand</item>
+        <item>Left Hand</item>
+        <item>Right Arm</item>
+        <item>Left Arm</item>
+        <item>Head</item>
+        <item>Chest</item>
+        <item>Torso</item>
+        <item>Right Leg</item>
+        <item>Left Leg</item>
+        <item>Right Foot</item>
+        <item>Left Foot</item>
+        <item>Upper Back</item>
+        <item>Lower Back</item>
+    </string-array>
+
+
+    <string name="front">Front</string>
+    <string name="back">Back</string>
+
 </resources>

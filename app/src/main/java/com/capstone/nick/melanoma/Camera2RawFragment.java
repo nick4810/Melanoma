@@ -616,10 +616,11 @@ public class Camera2RawFragment extends Fragment
         }
     };
 
-    public static Camera2RawFragment newInstance(String userEmail) {
+    public static Camera2RawFragment newInstance(String userEmail, String location) {
         Camera2RawFragment c = new Camera2RawFragment();
         Bundle bdl = new Bundle(1);
         bdl.putString("EMAIL", userEmail);
+        bdl.putString("LOCATION", location);
         c.setArguments(bdl);
 
         return c;

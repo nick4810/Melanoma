@@ -25,6 +25,7 @@ import android.os.Bundle;
  */
 public class AddData extends Activity {
     String userEmail;
+    String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +33,10 @@ public class AddData extends Activity {
         setContentView(R.layout.activity_add_data);
 
         userEmail = getIntent().getExtras().getString("EMAIL");
+        location = getIntent().getExtras().getString("LOCATION");
         if (null == savedInstanceState) {
             getFragmentManager().beginTransaction()
-                    .replace(R.id.container, Camera2RawFragment.newInstance(userEmail))
+                    .replace(R.id.container, Camera2RawFragment.newInstance(userEmail, location))
                     .commit();
         }
     }

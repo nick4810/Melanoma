@@ -2,14 +2,18 @@ package com.capstone.nick.melanoma;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,7 +21,10 @@ public class BodySelect extends NavigatingActivity implements View.OnTouchListen
 
     private boolean loggedIn;
     private String userEmail;
+
     private TextView nextText;
+    private TextView locationText;
+    private Boolean front =true;
 
 
     @Override
@@ -30,26 +37,51 @@ public class BodySelect extends NavigatingActivity implements View.OnTouchListen
         super.onCreateDrawer(loggedIn, userEmail);
 
 
-
-        final Intent intent = new Intent(this, AddData.class);
-        intent.putExtra("LOGGEDIN", loggedIn);
-        intent.putExtra("EMAIL", userEmail);
-
-        nextText = (TextView)findViewById(R.id.txt_Next);
-        nextText.setTextColor(Color.BLUE);
-        nextText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(intent);
-            }
-        });
+        locationText = (TextView)findViewById(R.id.txt_Location);
 
         ImageView iv = (ImageView) findViewById (R.id.image);
         if (iv != null) {
             iv.setOnTouchListener (this);
         }
 
-        toast ("Touch the screen to discover where the regions are.");
+
+        final Switch toggleView = (Switch)findViewById(R.id.body_view);
+        toggleView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // do something, the isChecked will be
+                // true if the switch is in the On position
+                ImageView imageView = (ImageView) findViewById(R.id.image);
+                int nextImage;
+
+                if(isChecked){
+                    front=false;
+                    nextImage = R.drawable.human_areas_back;
+                    toggleView.setText(R.string.back);
+                } else {
+                    front=true;
+                    nextImage = R.drawable.human_areas_front;
+                    toggleView.setText(R.string.front);
+                }
+                imageView.setImageResource (nextImage);
+                imageView.setTag (nextImage);
+            }
+        });
+        //toast ("Touch the screen to discover where the regions are.");
+
+
+        final Intent intent = new Intent(this, ImageDetails.class);
+
+        nextText = (TextView)findViewById(R.id.txt_Next);
+        nextText.setTextColor(Color.BLUE);
+        nextText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent.putExtra("LOGGEDIN", loggedIn);
+                intent.putExtra("EMAIL", userEmail);
+                intent.putExtra("LOCATION", locationText.getText().toString());
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -61,7 +93,7 @@ public class BodySelect extends NavigatingActivity implements View.OnTouchListen
 
     public boolean onTouch (View v, MotionEvent ev)
     {
-        boolean handledHere = false;
+        boolean handledHere;
 
         nextText.setVisibility(View.VISIBLE);
 
@@ -69,37 +101,21 @@ public class BodySelect extends NavigatingActivity implements View.OnTouchListen
 
         final int evX = (int) ev.getX();
         final int evY = (int) ev.getY();
-        int nextImage = -1;			// resource id of the next image to display
 
         // If we cannot find the imageView, return.
         ImageView imageView = (ImageView) v.findViewById (R.id.image);
         if (imageView == null) return false;
 
-        // When the action is Down, see if we should show the "pressed" image for the default image.
-        // We do this when the default image is showing. That condition is detectable by looking at the
-        // tag of the view. If it is null or contains the resource number of the default image, display the pressed image.
-        Integer tagNum = (Integer) imageView.getTag ();
-        int currentResource = (tagNum == null) ? R.drawable.p2_ship_default : tagNum.intValue ();
-
         // Now that we know the current resource being displayed we can handle the DOWN and UP events.
 
         switch (action) {
             case MotionEvent.ACTION_DOWN :
-                if (currentResource == R.drawable.p2_ship_default) {
-                    nextImage = R.drawable.p2_ship_pressed;
-                    handledHere = true;
-       /*
-       } else if (currentResource != R.drawable.p2_ship_default) {
-         nextImage = R.drawable.p2_ship_default;
-         handledHere = true;
-       */
-                } else handledHere = true;
+                handledHere = true;
                 break;
 
             case MotionEvent.ACTION_UP :
                 // On the UP, we do the click action.
-                // The hidden image (image_areas) has three different hotspots on it.
-                // The colors are red, blue, and yellow.
+                // The hidden image (human_areas_select) has multiple hotspots on it.
                 // Use image_areas to determine which region the user touched.
                 v.performClick();
                 int touchColor = getHotspotColor (R.id.image_areas, evX, evY);
@@ -110,21 +126,66 @@ public class BodySelect extends NavigatingActivity implements View.OnTouchListen
                 // varying pixel density.
                 ColorTool ct = new ColorTool ();
                 int tolerance = 25;
-                //nextImage = R.drawable.p2_ship_default;
-                if (ct.closeMatch (Color.RED, touchColor, tolerance))
-                    //nextImage = R.drawable.;
-                else if (ct.closeMatch (Color.BLUE, touchColor, tolerance))
-                    //nextImage = R.drawable.p2_ship_powered;
-                else if (ct.closeMatch (Color.YELLOW, touchColor, tolerance))
-                    //nextImage = R.drawable.p2_ship_no_star;
-                else if (ct.closeMatch (Color.WHITE, touchColor, tolerance))
-                    //nextImage = R.drawable.p2_ship_default;
 
-                // If the next image is the same as the last image, go back to the default.
-                //toast ("Current image: " + currentResource + " next: " + nextImage);
-                if (currentResource == nextImage) {
-                    //nextImage = R.drawable.p2_ship_default;
+                Resources res = getResources(); 
+                String[] locations = res.getStringArray(R.array.locations_array);
+
+                if (ct.closeMatch (Color.RED, touchColor, tolerance)) {
+                    //right hand (front)
+                    locationText.setText(locations[0]);
+                    if (!front) locationText.setText(locations[1]);
                 }
+                else if (ct.closeMatch (Color.YELLOW, touchColor, tolerance)) {
+                    //right arm (front)
+                    locationText.setText(locations[2]);
+                    if (!front) locationText.setText(locations[3]);
+                }
+                else if (ct.closeMatch (Color.BLUE, touchColor, tolerance)) {
+                    //left arm (front)
+                    locationText.setText(locations[3]);
+                    if (!front) locationText.setText(locations[2]);
+                }
+                else if (ct.closeMatch (Color.CYAN, touchColor, tolerance)) {
+                    //left foot (front)
+                    locationText.setText(locations[10]);
+                    if (!front) locationText.setText(locations[9]);
+                }
+                else if (ct.closeMatch (Color.MAGENTA, touchColor, tolerance)) {
+                    //chest
+                    locationText.setText(locations[5]);
+                    if (!front) locationText.setText(locations[11]);
+                }
+                else if (ct.closeMatch (Color.GRAY, touchColor, tolerance)) {
+                    //right foot (front)
+                    locationText.setText(locations[9]);
+                    if (!front) locationText.setText(locations[10]);
+                }
+                else if (ct.closeMatch (Color.LTGRAY, touchColor, tolerance)) {
+                    //head
+                    locationText.setText(locations[4]);
+                }
+                else if (ct.closeMatch (Color.DKGRAY, touchColor, tolerance)) {
+                    //torso
+                    locationText.setText(locations[6]);
+                    if (!front) locationText.setText(locations[12]);
+                }
+                else if (ct.closeMatch (Color.GREEN, touchColor, tolerance)) {
+                    //right leg (front)
+                    locationText.setText(locations[7]);
+                    if (!front) locationText.setText(locations[8]);
+                }
+                else if (ct.closeMatch (Color.parseColor("#660a80" /*purple*/), touchColor, tolerance)) {
+                    //left hand (front)
+                    locationText.setText(locations[1]);
+                    if (!front) locationText.setText(locations[0]);
+                }
+                else if (ct.closeMatch (Color.parseColor("#ff680a" /*orange*/), touchColor, tolerance)) {
+                    //left leg (front)
+                    locationText.setText(locations[8]);
+                    if (!front) locationText.setText(locations[7]);
+                }
+
+
                 handledHere = true;
                 break;
 
@@ -132,13 +193,6 @@ public class BodySelect extends NavigatingActivity implements View.OnTouchListen
                 handledHere = false;
         } // end switch
 
-        if (handledHere) {
-
-            if (nextImage > 0) {
-                imageView.setImageResource (nextImage);
-                imageView.setTag (nextImage);
-            }
-        }
         return handledHere;
     }
 
@@ -152,8 +206,6 @@ public class BodySelect extends NavigatingActivity implements View.OnTouchListen
     }
 
 
-/**
- */
 // More methods
 
     /**
