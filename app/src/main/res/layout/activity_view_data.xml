@@ -6,6 +6,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
 android:id="@+id/drawer_layout"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
+    android:background="@color/background"
 tools:context="com.capstone.nick.melanoma.ViewData">
 <!-- The main content view -->
     <android.support.constraint.ConstraintLayout
@@ -20,11 +21,11 @@ tools:context="com.capstone.nick.melanoma.ViewData">
             android:id="@+id/imagegallery"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/btnCam"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/SelectText"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0" />
 
         <ImageButton
@@ -45,7 +46,7 @@ tools:context="com.capstone.nick.melanoma.ViewData">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="8dp"
             android:onClick="onClick"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -68,9 +69,9 @@ tools:context="com.capstone.nick.melanoma.ViewData">
 
         <TextView
             android:id="@+id/SelectText"
-            android:layout_width="71dp"
-            android:layout_height="33dp"
-            android:layout_marginRight="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
             android:layout_marginTop="5dp"
             android:text="Select"
             android:textColor="#095de5"

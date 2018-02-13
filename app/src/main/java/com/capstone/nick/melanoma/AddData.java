@@ -18,14 +18,19 @@ package com.capstone.nick.melanoma;
 
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 /**
  * Activity displaying a fragment that implements RAW photo captures.
  */
 public class AddData extends Activity {
-    String userEmail;
-    String location;
+    private String userEmail;
+    private Boolean loggedIn;
+    private String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +38,11 @@ public class AddData extends Activity {
         setContentView(R.layout.activity_add_data);
 
         userEmail = getIntent().getExtras().getString("EMAIL");
+        loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
         location = getIntent().getExtras().getString("LOCATION");
         if (null == savedInstanceState) {
             getFragmentManager().beginTransaction()
-                    .replace(R.id.container, Camera2RawFragment.newInstance(userEmail, location))
+                    .replace(R.id.container, Camera2RawFragment.newInstance(userEmail, loggedIn, location))
                     .commit();
         }
     }

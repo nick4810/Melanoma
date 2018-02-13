@@ -25,6 +25,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
@@ -67,7 +68,11 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -127,7 +132,14 @@ public class Camera2RawFragment extends Fragment
      */
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
-    private String userEmail;
+    private static String userEmail;
+    private static Boolean loggedIn;
+    private static String location;
+    private static String date;
+    private static String time;
+
+    private static ProgressBar prog;
+    private static TextView progTxt;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 0);
@@ -522,9 +534,7 @@ public class Camera2RawFragment extends Fragment
             mGalleryFolder = new File(mGalleryFolder, "JPEG Images");
             File mRawGalleryFolder = new File(storageDirectory, userEmail);
             mRawGalleryFolder = new File(mRawGalleryFolder, "Raw Images");
-            /*TODO
-            ** instead of single directory, create sub directories separated by username
-            ** load that directory in ViewData*/
+
 
             if(!mGalleryFolder.exists()) {
                 mGalleryFolder.mkdirs();
@@ -584,7 +594,26 @@ public class Camera2RawFragment extends Fragment
                 finishedCaptureLocked();
             }
 
-            showToast(sb.toString());
+            System.out.println(sb.toString());
+
+
+            final Intent intent = new Intent(getContext(), ImageDetails.class);
+
+            intent.putExtra("LOGGEDIN", loggedIn);
+            intent.putExtra("EMAIL", userEmail);
+            intent.putExtra("LOCATION", location);
+            intent.putExtra("DATE", date);
+            intent.putExtra("TIME", time);
+
+            Handler handler = new Handler();
+            Runnable r = new Runnable() {
+                public void run() {
+                    startActivity(intent);
+                }
+            };
+            handler.postDelayed(r, 2000);
+
+
         }
 
         @Override
@@ -616,12 +645,12 @@ public class Camera2RawFragment extends Fragment
         }
     };
 
-    public static Camera2RawFragment newInstance(String userEmail, String location) {
+    public static Camera2RawFragment newInstance(String email, Boolean log, String loc) {
         Camera2RawFragment c = new Camera2RawFragment();
-        Bundle bdl = new Bundle(1);
-        bdl.putString("EMAIL", userEmail);
-        bdl.putString("LOCATION", location);
-        c.setArguments(bdl);
+        userEmail = email;
+        loggedIn = log;
+        location = loc;
+
 
         return c;
     }
@@ -629,14 +658,16 @@ public class Camera2RawFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_camera2_basic, container, false);
     }
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
-        userEmail = getArguments().getString("EMAIL");
+        prog = (ProgressBar)view.findViewById(R.id.progBar_saving);
+        progTxt = (TextView)view.findViewById(R.id.progBar_txt);
+
         view.findViewById(R.id.picture).setOnClickListener(this);
-        view.findViewById(R.id.info).setOnClickListener(this);
         mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
 
         // Setup a new OrientationEventListener.  This is used to handle rotation events like a
@@ -701,17 +732,11 @@ public class Camera2RawFragment extends Fragment
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.picture: {
+                prog.setVisibility(View.VISIBLE);
+                progTxt.setVisibility(View.VISIBLE);
+
                 takePicture();
-                break;
-            }
-            case R.id.info: {
-                Activity activity = getActivity();
-                if (null != activity) {
-                    new AlertDialog.Builder(activity)
-                            .setMessage("intro message")
-                            .setPositiveButton(android.R.string.ok, null)
-                            .show();
-                }
+
                 break;
             }
         }
@@ -1319,6 +1344,7 @@ public class Camera2RawFragment extends Fragment
             // Increment reference count to prevent ImageReader from being closed while we
             // are saving its Images in a background thread (otherwise their resources may
             // be freed while we are writing to a file).
+
             if (reader == null || reader.getAndRetain() == null) {
                 Log.e(TAG, "Paused the activity before we could save the image," +
                         " ImageReader already closed.");
@@ -1453,7 +1479,12 @@ public class Camera2RawFragment extends Fragment
                             }
                         });
             }
-        }
+
+        }/*
+        @Override
+        public void onPostExecute() {
+
+        }*/
 
         /**
          * Builder class for constructing {@link ImageSaver}s.
@@ -1467,6 +1498,8 @@ public class Camera2RawFragment extends Fragment
             private CameraCharacteristics mCharacteristics;
             private Context mContext;
             private RefCountedAutoCloseable<ImageReader> mReader;
+
+            private ImageSaver imgSvr;
 
             /**
              * Construct a new ImageSaverBuilder using the given {@link Context}.
@@ -1515,8 +1548,10 @@ public class Camera2RawFragment extends Fragment
                 if (!isComplete()) {
                     return null;
                 }
-                return new ImageSaver(mImage, mFile, mCaptureResult, mCharacteristics, mContext,
+                imgSvr = new ImageSaver(mImage, mFile, mCaptureResult, mCharacteristics, mContext,
                         mReader);
+
+                return imgSvr;
             }
 
             public synchronized String getSaveLocation() {
@@ -1697,7 +1732,13 @@ public class Camera2RawFragment extends Fragment
      */
     private static String generateTimestamp() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS", Locale.US);
-        return sdf.format(new Date());
+        String timestamp = sdf.format(new Date());
+        sdf = new SimpleDateFormat("MM/dd/YYYY_HH:mm", Locale.US);
+        String tempDT = sdf.format(new Date());
+        time = tempDT.substring(11);
+        date = tempDT.substring(0, 10);
+
+        return timestamp;
     }
 
     /**

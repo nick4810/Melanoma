@@ -69,7 +69,7 @@ public class BodySelect extends NavigatingActivity implements View.OnTouchListen
         //toast ("Touch the screen to discover where the regions are.");
 
 
-        final Intent intent = new Intent(this, ImageDetails.class);
+        final Intent intent = new Intent(this, AddData.class);
 
         nextText = (TextView)findViewById(R.id.txt_Next);
         nextText.setTextColor(Color.BLUE);
