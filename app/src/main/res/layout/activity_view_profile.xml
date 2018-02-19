@@ -48,7 +48,7 @@
 
 
         <RadioGroup
-            android:id="@+id/radioGender"
+            android:id="@+id/gendGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -83,7 +83,7 @@
 
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/editDOB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
@@ -91,6 +91,7 @@
             android:inputType="date" />
 
         <RadioGroup
+            android:id="@+id/ethGroup"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="15dp"
@@ -105,7 +106,7 @@
                 tools:layout_editor_absoluteX="38dp"
                 tools:layout_editor_absoluteY="246dp" />
             <RadioButton
-                android:id="@+id/radioButton3"
+                android:id="@+id/toggle_white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Caucasian/White"
@@ -113,7 +114,7 @@
                 tools:layout_editor_absoluteY="279dp" />
 
             <RadioButton
-                android:id="@+id/radioButton4"
+                android:id="@+id/toggle_black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="African American/Black"
@@ -121,7 +122,7 @@
                 tools:layout_editor_absoluteY="320dp" />
 
             <RadioButton
-                android:id="@+id/radioButton5"
+                android:id="@+id/toggle_asian"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Asian"
@@ -129,7 +130,7 @@
                 tools:layout_editor_absoluteY="279dp" />
 
             <RadioButton
-                android:id="@+id/radioButton6"
+                android:id="@+id/toggle_hisp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hispanic"
@@ -137,7 +138,7 @@
                 tools:layout_editor_absoluteY="279dp" />
 
             <RadioButton
-                android:id="@+id/radioButton7"
+                android:id="@+id/toggle_prefNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Prefer Not To Answer"
@@ -145,7 +146,7 @@
                 tools:layout_editor_absoluteY="279dp" />
 
             <RadioButton
-                android:id="@+id/radioButton8"
+                android:id="@+id/toggle_other"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Other"
@@ -159,6 +160,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:layout_marginStart="100dp"
+            android:onClick="onClick"
             android:text="Save Changes"/>
 
 

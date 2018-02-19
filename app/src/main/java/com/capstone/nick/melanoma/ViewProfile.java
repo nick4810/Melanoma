@@ -2,14 +2,24 @@ package com.capstone.nick.melanoma;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
 
 public class ViewProfile extends NavigatingActivity  {
     private boolean loggedIn;
@@ -21,6 +31,14 @@ public class ViewProfile extends NavigatingActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_profile);
 
+        userEmail = getIntent().getExtras().getString("EMAIL");
+        loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
+        super.onCreateDrawer(loggedIn, userEmail);
+
+
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        loadProfile();
+
         findViewById(R.id.saveDets).setBackgroundColor(Color.GREEN);
 
         //set these details to not-editable
@@ -31,36 +49,60 @@ public class ViewProfile extends NavigatingActivity  {
         editText = (EditText)findViewById(R.id.editEmail);
         editText.setEnabled(false);
 
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-        //StorageReference fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename);
 
+    }
 
-        //FirebaseDatabase database = FirebaseDatabase.getInstance();
-        //DatabaseReference myRef = database.getReference("message");
+    private void loadProfile() {
+        StorageReference fileRef = mStorageRef.child(userEmail+"/profile.txt");
 
+        File rootPath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/");
+        final File localFile = new File(rootPath,"profile.txt");
 
-        //get details from firebase
-        // Read from the database
-        /*
-        myRef.addValueEventListener(new ValueEventListener() {
+        fileRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-                Log.d(TAG, "Value is: " + value);
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                //downloaded file
             }
-
+        }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
+            public void onFailure(@NonNull Exception exception) {
+                //failed to download file
             }
         });
-*/
-        userEmail = getIntent().getExtras().getString("EMAIL");
-        loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
-        super.onCreateDrawer(loggedIn, userEmail);
+        FileHandler reader = new FileHandler();
+        String content = reader.readFile(rootPath.toString(), "profile.txt");
+        String[] lines = content.split("\\n");
+
+        EditText setText = (EditText)findViewById(R.id.editFname);
+        setText.setText(lines[0].substring(12));
+        setText = (EditText)findViewById(R.id.editLname);
+        setText.setText(lines[1].substring(11));
+        setText = (EditText)findViewById(R.id.editEmail);
+        setText.setText(lines[2].substring(7));
+        setText = (EditText)findViewById(R.id.editDOB);
+        setText.setText(lines[4].substring(15));
+
+        String gendStr =lines[3].substring(5);
+        RadioGroup setSel = (RadioGroup)findViewById(R.id.gendGroup);
+        if(gendStr.equals("Male"))
+            setSel.check(R.id.toggleMale);
+        else if(gendStr.equals("Female"))
+            setSel.check(R.id.toggleFemale);
+
+        String ethStr =lines[5].substring(11);
+        setSel = (RadioGroup)findViewById(R.id.ethGroup);
+        if(ethStr.equals("Caucasian/White"))
+            setSel.check(R.id.toggle_white);
+        else if(ethStr.equals("African American/Black"))
+            setSel.check(R.id.toggle_black);
+        else if(ethStr.equals("Asian"))
+            setSel.check(R.id.toggle_asian);
+        else if(ethStr.equals("Hispanic"))
+            setSel.check(R.id.toggle_hisp);
+        else if(ethStr.equals("Prefer Not To Answer"))
+            setSel.check(R.id.toggle_prefNo);
+        else if(ethStr.equals("Other"))
+            setSel.check(R.id.toggle_other);
 
     }
 
@@ -72,25 +114,55 @@ public class ViewProfile extends NavigatingActivity  {
     }
 
     public void uploadChanges() {
+        FileHandler saver = new FileHandler();
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/";
+        String data = "";
+
+        data+="First Name: ";
         EditText temp = (EditText)findViewById(R.id.editFname);
-        String fName = temp.getText().toString();
+        data+= temp.getText().toString();
+        data+="\nLast Name: ";
         temp = (EditText)findViewById(R.id.editLname);
-        String lName = temp.getText().toString();
+        data+= temp.getText().toString();
+        data+="\nEmail: ";
         temp = (EditText)findViewById(R.id.editEmail);
-        String email = temp.getText().toString();
+        data+= temp.getText().toString();
 
-        RadioButton gend = (RadioButton)findViewById(R.id.toggleMale);
-        boolean male = gend.isSelected();
-        gend = (RadioButton)findViewById(R.id.toggleFemale);
-        boolean female = gend.isSelected();
+        data+="\nSex: ";
+        RadioGroup radioButtonGroup = (RadioGroup)findViewById(R.id.gendGroup);
+        int radioButtonID = radioButtonGroup.getCheckedRadioButtonId();
+        if(radioButtonID >0) {
+            View radioButton = radioButtonGroup.findViewById(radioButtonID);
+            int idx = radioButtonGroup.indexOfChild(radioButton);
 
-        //EditText temp = (EditText)findViewById(R.id.DOB);
-        //String dob = temp.getText().toString();
+            RadioButton r = (RadioButton) radioButtonGroup.getChildAt(idx);
+            data+= r.getText().toString();
+        }
+
+        data+="\nDate of Birth: ";
+        temp = (EditText)findViewById(R.id.editDOB);
+        data+= temp.getText().toString();
+
+        data+="\nEthnicity: ";
+        radioButtonGroup = (RadioGroup)findViewById(R.id.ethGroup);
+        radioButtonID = radioButtonGroup.getCheckedRadioButtonId();
+        if(radioButtonID >0) {
+            View radioButton = radioButtonGroup.findViewById(radioButtonID);
+            int idx = radioButtonGroup.indexOfChild(radioButton);
+
+            RadioButton r = (RadioButton) radioButtonGroup.getChildAt(idx);
+            data+= r.getText().toString();
+        }
+        System.out.println(data);
+        saver.saveToFile(path, "profile.txt", data);
+        final Uri file = Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/profile.txt"));
+        StorageReference fileRef = mStorageRef.child(userEmail+"/profile.txt");
+        fileRef.putFile(file);
+
         //TODO
-        //ethnicity change
-        //file writing/upload
+        //file writing/upload/download
+        //create default profile.txt upon creating user
+        //check connection - then get profile from Firebase, otherwise locally
 
-        // Write a message to the database
-        //myRef.setValue("Hello, World!");
     }
 }

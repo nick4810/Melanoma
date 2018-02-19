@@ -41,6 +41,9 @@ public class ViewData extends NavigatingActivity {
     /*TODO
     ** need an efficient way to load thumbnails
     ** change title(s) of activity(s)
+    **check for internet connection, create queue
+    **delete checked images
+    **known issue: checkboxes not appearing off-screen
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +128,6 @@ public class ViewData extends NavigatingActivity {
     }
 
     public void addData() {
-        //Intent intent = new Intent(this, AddData.class);
         Intent intent = new Intent(this, BodySelect.class);
         intent.putExtra("LOGGEDIN", loggedIn);
         intent.putExtra("EMAIL", userEmail);
@@ -204,18 +206,20 @@ public class ViewData extends NavigatingActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             // continue with upload
                             for (MyAdapter.ViewHolder view : adapter.selViews) {
-                                /*TODO
-                                **check for internet connection, create queue
-                                */
-                                String filename = "RAW";
-                                filename+=view.title.getText().toString().substring(4, view.title.length()-3)+"dng";
+
+                                String filename = "RAW" + view.title.getText().toString().substring(4, view.title.length()-3)+"dng";
+                                String filename2 = "RAW" + view.title.getText().toString().substring(4, view.title.length()-3)+"txt";
 
                                 final Uri file = Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename));
-                                StorageReference fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename);
-                                System.out.println(fileRef.toString());
+                                final Uri file2 = Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename2));
 
-                                fileRef.putFile(file)
-                                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                StorageReference fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename);
+                                //System.out.println(fileRef.toString());
+
+                                fileRef.putFile(file);
+                                fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename2);
+                                fileRef.putFile(file2);
+                                        /*.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                             @Override
                                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                                 // Get a URL to the uploaded content
@@ -228,10 +232,10 @@ public class ViewData extends NavigatingActivity {
                                                 // Handle unsuccessful uploads
                                                 // ...
                                             }
-                                        });
+                                        });*/
 
                             }
-                            //make images not selectable
+                            //make images non-selectable
                             ImageButton temp = (ImageButton) findViewById(R.id.btnUpload);
                             temp.setVisibility(View.INVISIBLE);
                             temp = (ImageButton) findViewById(R.id.btnTrash);

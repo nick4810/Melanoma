@@ -14,6 +14,9 @@ package com.capstone.nick.melanoma;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * TODO:
+ * known issue: images very dark in low-light conditions/flash 'flashing' but not adding light
  */
 
 
@@ -135,6 +138,8 @@ public class Camera2RawFragment extends Fragment
     private static String userEmail;
     private static Boolean loggedIn;
     private static String location;
+
+    private static String filename;
     private static String date;
     private static String time;
 
@@ -543,6 +548,7 @@ public class Camera2RawFragment extends Fragment
                 mRawGalleryFolder.mkdirs();
             }
 
+            filename = "RAW_"+currentDateTime;
             File rawFile = new File(mRawGalleryFolder,
                     "RAW_" + currentDateTime + ".dng");
             File jpegFile = new File(mGalleryFolder,
@@ -602,6 +608,7 @@ public class Camera2RawFragment extends Fragment
             intent.putExtra("LOGGEDIN", loggedIn);
             intent.putExtra("EMAIL", userEmail);
             intent.putExtra("LOCATION", location);
+            intent.putExtra("FILE", filename);
             intent.putExtra("DATE", date);
             intent.putExtra("TIME", time);
 

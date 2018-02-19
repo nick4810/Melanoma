@@ -13,14 +13,14 @@ import java.io.InputStreamReader;
 
 
 public class FileHandler {
-    final static String TAG = FileHandler.class.getName();
+    final String TAG = FileHandler.class.getName();
 
-    public static String readFile(String path, String fileName){
+    public  String readFile(String path, String fileName){
         String line;
         String output = "";
 
         try {
-            FileInputStream fileInputStream = new FileInputStream (new File(path + fileName));
+            FileInputStream fileInputStream = new FileInputStream (new File(path +"/"+ fileName));
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             StringBuilder stringBuilder = new StringBuilder();
@@ -42,14 +42,14 @@ public class FileHandler {
         return output;
     }
 
-    public static boolean saveToFile(String path, String fileName, String data){
+    public boolean saveToFile(String path, String fileName, String data){
         try {
             new File(path).mkdir();
             File file = new File(path + fileName);
             if(!file.exists()) {
                 file.createNewFile();
             }
-            FileOutputStream outputStream = new FileOutputStream(file,true);
+            FileOutputStream outputStream = new FileOutputStream(file,false);
             outputStream.write(data.getBytes());
 
             outputStream.close();
