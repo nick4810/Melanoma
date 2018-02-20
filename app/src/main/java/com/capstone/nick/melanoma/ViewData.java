@@ -39,8 +39,6 @@ public class ViewData extends NavigatingActivity {
     private StorageReference mStorageRef;
 
     /*TODO
-    ** need an efficient way to load thumbnails
-    ** change title(s) of activity(s)
     **check for internet connection, create queue
     **delete checked images
     **known issue: checkboxes not appearing off-screen
@@ -58,17 +56,33 @@ public class ViewData extends NavigatingActivity {
         selText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //make images selectable
-                ImageButton temp = (ImageButton)findViewById(R.id.btnUpload);
-                temp.setVisibility(View.VISIBLE);
-                temp = (ImageButton)findViewById(R.id.btnTrash);
-                temp.setVisibility(View.VISIBLE);
+                if(selText.getText().toString().equals("Select")) {
+                    //change text
+                    selText.setText("Cancel");
+                    //make images selectable
+                    ImageButton temp = (ImageButton)findViewById(R.id.btnUpload);
+                    temp.setVisibility(View.VISIBLE);
+                    temp = (ImageButton)findViewById(R.id.btnTrash);
+                    temp.setVisibility(View.VISIBLE);
 
-                //for(CreateList c : adapter.galleryList) {
-                //[hashmap]? of ___, chkbox pairs stored in myadapter, chkbox listener adds to hashmap
-                //}
-                for(MyAdapter.ViewHolder view : adapter.imageViews) {
-                    view.chkBox.setVisibility(View.VISIBLE);
+                    //for(CreateList c : adapter.galleryList) {
+                    //[hashmap]? of ___, chkbox pairs stored in myadapter, chkbox listener adds to hashmap
+                    //}
+                    for(MyAdapter.ViewHolder view : adapter.imageViews) {
+                        view.chkBox.setVisibility(View.VISIBLE);
+                    }
+                } else if(selText.getText().toString().equals("Cancel")) {
+                    //change text
+                    selText.setText("Select");
+                    //go to normal view
+                    findViewById(R.id.btnUpload).setVisibility(View.GONE);
+                    findViewById(R.id.btnTrash).setVisibility(View.GONE);
+
+                    for(MyAdapter.ViewHolder view : adapter.imageViews) {
+                        view.chkBox.setChecked(false);
+                        view.chkBox.setVisibility(View.GONE);
+                    }
+
                 }
             }
         });
@@ -79,7 +93,7 @@ public class ViewData extends NavigatingActivity {
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(),2);
         recyclerView.setLayoutManager(layoutManager);
         ArrayList<CreateList> createLists = prepareData();
-        adapter = new MyAdapter(getApplicationContext(), createLists);
+        adapter = new MyAdapter(getApplicationContext(), createLists, userEmail);
         recyclerView.setAdapter(adapter);
 
         //for firebase storage
@@ -98,7 +112,7 @@ public class ViewData extends NavigatingActivity {
         }
 */
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/JPEG Images/";//specify path
-        System.out.println(path);
+        //System.out.println(path);
 
         File f = new File(path);
         File file[] = f.listFiles();
@@ -170,14 +184,12 @@ public class ViewData extends NavigatingActivity {
                                 */
                             }
                             //make images not selectable
-                            ImageButton temp = (ImageButton) findViewById(R.id.btnUpload);
-                            temp.setVisibility(View.INVISIBLE);
-                            temp = (ImageButton) findViewById(R.id.btnTrash);
-                            temp.setVisibility(View.INVISIBLE);
+                            findViewById(R.id.btnUpload).setVisibility(View.GONE);
+                            findViewById(R.id.btnTrash).setVisibility(View.GONE);
 
                             for (MyAdapter.ViewHolder view : adapter.imageViews) {
                                 view.chkBox.setChecked(false);
-                                view.chkBox.setVisibility(View.INVISIBLE);
+                                view.chkBox.setVisibility(View.GONE);
                             }
                             adapter.selViews.clear();
                         }
@@ -236,14 +248,12 @@ public class ViewData extends NavigatingActivity {
 
                             }
                             //make images non-selectable
-                            ImageButton temp = (ImageButton) findViewById(R.id.btnUpload);
-                            temp.setVisibility(View.INVISIBLE);
-                            temp = (ImageButton) findViewById(R.id.btnTrash);
-                            temp.setVisibility(View.INVISIBLE);
+                            findViewById(R.id.btnUpload).setVisibility(View.GONE);
+                            findViewById(R.id.btnTrash).setVisibility(View.GONE);
 
                             for (MyAdapter.ViewHolder view : adapter.imageViews) {
                                 view.chkBox.setChecked(false);
-                                view.chkBox.setVisibility(View.INVISIBLE);
+                                view.chkBox.setVisibility(View.GONE);
                             }
                             adapter.selViews.clear();
                         }

@@ -12,12 +12,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 
@@ -153,12 +156,14 @@ public class ViewProfile extends NavigatingActivity  {
             RadioButton r = (RadioButton) radioButtonGroup.getChildAt(idx);
             data+= r.getText().toString();
         }
-        System.out.println(data);
+        //System.out.println(data);
         saver.saveToFile(path, "profile.txt", data);
         final Uri file = Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/profile.txt"));
         StorageReference fileRef = mStorageRef.child(userEmail+"/profile.txt");
         fileRef.putFile(file);
 
+        TextView saved = (TextView)findViewById(R.id.savedTxt);
+        saved.setVisibility(View.VISIBLE);
         //TODO
         //file writing/upload/download
         //create default profile.txt upon creating user

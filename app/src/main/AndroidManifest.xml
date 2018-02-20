@@ -41,17 +41,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".AddData"
             android:label="@string/title_activity_add_data" />
         <activity
             android:name=".ViewProfile"
             android:label="@string/title_activity_view_profile" />
-        <activity android:name=".Login" />
-        <activity android:name=".ViewData" />
-        <activity android:name=".NewUser" />
-        <activity android:name=".BodySelect" />
-        <activity android:name=".ImageDetails"></activity>
+        <activity
+            android:name=".ViewData"
+            android:label="@string/title_activity_view_data"/>
+        <activity
+            android:name=".NewUser"
+            android:label="@string/title_activity_new_user"/>
+        <activity
+            android:name=".BodySelect"
+            android:label="@string/title_activity_body_select"/>
+        <activity
+            android:name=".ImageDetails"
+            android:label="@string/title_activity_image_details">
+        </activity>
     </application>
 
 </manifest>
