@@ -76,7 +76,6 @@ public class MainScreen extends NavigatingActivity implements
 
         // Button listeners
         findViewById(R.id.sign_in_button).setOnClickListener(this);
-        findViewById(R.id.sign_out_button).setOnClickListener(this);
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -93,6 +92,9 @@ public class MainScreen extends NavigatingActivity implements
 
         if (logMeOut){
             final Intent intent = new Intent(this, MainScreen.class);
+            /* TODO:
+            ** check parameters needed for this intent
+            */
             intent.putExtra("LOGGEDIN", loggedIn);
             mGoogleApiClient.connect();
             mGoogleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
@@ -216,30 +218,9 @@ public class MainScreen extends NavigatingActivity implements
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                         }
 
-                        // ...
                     }
                 });
     }
-
-        /*get user details
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            // Name, email address, and profile photo Url
-            String name = user.getDisplayName();
-            String email = user.getEmail();
-            Uri photoUrl = user.getPhotoUrl();
-
-            // Check if user's email is verified
-            boolean emailVerified = user.isEmailVerified();
-
-            // The user's ID, unique to the Firebase project. Do NOT use this value to
-            // authenticate with your backend server, if you have one. Use
-            // FirebaseUser.getToken() instead.
-            String uid = user.getUid();
-        }
-         */
-    //for sign out:
-    //
 
 
     private void signOut() {
@@ -315,9 +296,6 @@ public class MainScreen extends NavigatingActivity implements
         switch (v.getId()) {
             case R.id.sign_in_button:
                 signIn();
-                break;
-            case R.id.sign_out_button:
-                signOut();
                 break;
             case R.id.btn_newUser:
                 Intent intent = new Intent(this, NewUser.class);

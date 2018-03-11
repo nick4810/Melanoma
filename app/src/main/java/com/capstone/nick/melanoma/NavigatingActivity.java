@@ -69,33 +69,25 @@ class NavigatingActivity extends AppCompatActivity {
         if(loggedIn) {//logged in
             if (numChosen == 0) {//home
                 intent = new Intent(this, MainScreen.class);
-                intent.putExtra("LOGGEDIN", loggedIn);
-                intent.putExtra("EMAIL", email);
             } else if (numChosen == 1) {//profile
                 intent = new Intent(this, ViewProfile.class);
-                intent.putExtra("LOGGEDIN", loggedIn);
-                intent.putExtra("EMAIL", email);
             } else if (numChosen == 2) {//data
                 intent = new Intent(this, ViewData.class);
-                intent.putExtra("LOGGEDIN", loggedIn);
-                intent.putExtra("EMAIL", email);
+            } else if (numChosen == 3) {//settings
+                intent = new Intent(this, SettingsActivity.class);
             } else {//log out
                 intent = new Intent(this, MainScreen.class);
-                intent.putExtra("LOGGEDIN", loggedIn);
-                intent.putExtra("EMAIL", email);
                 intent.putExtra("LOGMEOUT", true);
             }
         } else {//not logged in
             if (numChosen == 0) {//home
                 intent = new Intent(this, MainScreen.class);
-                intent.putExtra("LOGGEDIN", loggedIn);
-                intent.putExtra("EMAIL", email);
             } else {//login
                 intent = new Intent(this, NewUser.class);
-                intent.putExtra("LOGGEDIN", loggedIn);
-                intent.putExtra("EMAIL", email);
             }
         }
+        intent.putExtra("LOGGEDIN", loggedIn);
+        intent.putExtra("EMAIL", email);
         startActivity(intent);
     }
 

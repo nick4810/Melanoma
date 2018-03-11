@@ -20,9 +20,9 @@ import java.util.ArrayList;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private ArrayList<CreateList> galleryList;
-    //public hashmap?
-    public ArrayList<ViewHolder> imageViews = new ArrayList<>();
-    public ArrayList<ViewHolder> selViews = new ArrayList<>();
+
+    public ArrayList<ViewHolder> imageViews = new ArrayList<>();//list of all images
+    public ArrayList<ViewHolder> selViews = new ArrayList<>();//list of selected images
 
     private Context context;
 
@@ -38,23 +38,27 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_layout, viewGroup, false);
         ViewHolder temp = new ViewHolder(view);
-        imageViews.add(temp);
+        imageViews.add(temp);//add to list of all images
         return temp;
     }
 
     @Override
     public void onBindViewHolder(final MyAdapter.ViewHolder viewHolder, int i) {
         String fileStr =galleryList.get(i).getImage_title();
+        viewHolder.setFilename(fileStr);
+
+        //create a more user-friendly title showing date/time
         String newTitle = fileStr.substring(10,16);
         newTitle+=fileStr.substring(5,10);
         newTitle+=fileStr.substring(16,18);
         newTitle+=":";
         newTitle+=fileStr.substring(19,21);
-        viewHolder.title.setText(newTitle);
+        viewHolder.title.setText(newTitle);//set imageview title
 
         viewHolder.img.setScaleType(ImageView.ScaleType.CENTER_CROP);
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/JPEG Images/";
         path+=fileStr;
+        //set thumbnail into imageview
         viewHolder.img.setImageBitmap(decodeSampledBitmapFromResource(path, 150, 150));
 
         viewHolder.img.setOnClickListener(new View.OnClickListener() {
@@ -121,12 +125,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         public TextView title;
         private ImageView img;
         public CheckBox chkBox;
+        public String filename;
         public ViewHolder(View view) {
             super(view);
 
             title = (TextView)view.findViewById(R.id.title);
             img = (ImageView) view.findViewById(R.id.img);
             chkBox = (CheckBox)view.findViewById(R.id.chkImage);
+        }
+
+        public void setFilename(String name) {
+            filename =name;
         }
     }
 }

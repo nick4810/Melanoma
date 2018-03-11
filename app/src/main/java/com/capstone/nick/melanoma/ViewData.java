@@ -52,6 +52,7 @@ public class ViewData extends NavigatingActivity {
         userEmail = getIntent().getExtras().getString("EMAIL");
         super.onCreateDrawer(loggedIn, userEmail);
 
+        //add an option to select images
         final TextView selText = (TextView)findViewById(R.id.SelectText);
         selText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +87,7 @@ public class ViewData extends NavigatingActivity {
                 }
             }
         });
-
+        //set up image gallery
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.imagegallery);
         recyclerView.setHasFixedSize(true);
 
@@ -160,17 +161,31 @@ public class ViewData extends NavigatingActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             // continue with delete
                             for (MyAdapter.ViewHolder view : adapter.selViews) {
-                                /*
-                                //delete locally
-                                File dir = getFilesDir();
-                                File file = new File(dir, "my_filename");
+                                String viewFile =view.filename.substring(4, view.filename.length()-3);
+                                String filename = "RAW" + viewFile+ "dng";
+                                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename);
                                 boolean deleted = file.delete();
                                 //delete from firebase
-                                // Create a reference to the file to delete
-                                StorageReference desertRef = mStorageRef.child("images/desert.jpg");
-
+                                StorageReference fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename);
                                 // Delete the file
-                                desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                fileRef.delete();
+                                if(deleted) System.out.println("deleted: "+filename);
+
+                                filename = "RAW" + viewFile+ "txt";
+                                file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename);
+                                deleted = file.delete();
+                                //delete from firebase
+                                fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename);
+                                // Delete the file
+                                fileRef.delete();
+                                if(deleted) System.out.println("deleted: "+filename);
+
+                                filename = "JPEG" + viewFile+ "jpg";
+                                file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/JPEG Images/"+filename);
+                                deleted = file.delete();
+                                if(deleted) System.out.println("deleted: "+filename);
+
+                                /*.addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         // File deleted successfully
@@ -180,8 +195,8 @@ public class ViewData extends NavigatingActivity {
                                     public void onFailure(@NonNull Exception exception) {
                                         // Uh-oh, an error occurred!
                                     }
-                                });
-                                */
+                                });*/
+
                             }
                             //make images not selectable
                             findViewById(R.id.btnUpload).setVisibility(View.GONE);
@@ -218,9 +233,9 @@ public class ViewData extends NavigatingActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             // continue with upload
                             for (MyAdapter.ViewHolder view : adapter.selViews) {
-
-                                String filename = "RAW" + view.title.getText().toString().substring(4, view.title.length()-3)+"dng";
-                                String filename2 = "RAW" + view.title.getText().toString().substring(4, view.title.length()-3)+"txt";
+                                String viewFile =view.filename.substring(4, view.filename.length()-3);
+                                String filename = "RAW" + viewFile+"dng";
+                                String filename2 = "RAW" + viewFile+"txt";
 
                                 final Uri file = Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename));
                                 final Uri file2 = Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename2));

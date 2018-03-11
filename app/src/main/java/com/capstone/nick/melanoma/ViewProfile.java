@@ -1,5 +1,7 @@
 package com.capstone.nick.melanoma;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -24,6 +26,9 @@ import org.w3c.dom.Text;
 
 import java.io.File;
 
+//TODO
+//file writing/upload/download
+//check connection - then get profile from Firebase, otherwise locally
 public class ViewProfile extends NavigatingActivity  {
     private boolean loggedIn;
     private String  userEmail;
@@ -38,7 +43,7 @@ public class ViewProfile extends NavigatingActivity  {
         loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
         super.onCreateDrawer(loggedIn, userEmail);
 
-
+        //populate fields with data found
         mStorageRef = FirebaseStorage.getInstance().getReference();
         loadProfile();
 
@@ -72,10 +77,12 @@ public class ViewProfile extends NavigatingActivity  {
                 //failed to download file
             }
         });
+        //get contents of file
         FileHandler reader = new FileHandler();
         String content = reader.readFile(rootPath.toString(), "profile.txt");
         String[] lines = content.split("\\n");
 
+        //set the edittext fields
         EditText setText = (EditText)findViewById(R.id.editFname);
         setText.setText(lines[0].substring(12));
         setText = (EditText)findViewById(R.id.editLname);
@@ -85,6 +92,7 @@ public class ViewProfile extends NavigatingActivity  {
         setText = (EditText)findViewById(R.id.editDOB);
         setText.setText(lines[4].substring(15));
 
+        //set the radio button selections
         String gendStr =lines[3].substring(5);
         RadioGroup setSel = (RadioGroup)findViewById(R.id.gendGroup);
         if(gendStr.equals("Male"))
@@ -116,11 +124,12 @@ public class ViewProfile extends NavigatingActivity  {
         }
     }
 
-    public void uploadChanges() {
+    private void uploadChanges() {
         FileHandler saver = new FileHandler();
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/";
         String data = "";
 
+        //get data from edittexts
         data+="First Name: ";
         EditText temp = (EditText)findViewById(R.id.editFname);
         data+= temp.getText().toString();
@@ -131,6 +140,7 @@ public class ViewProfile extends NavigatingActivity  {
         temp = (EditText)findViewById(R.id.editEmail);
         data+= temp.getText().toString();
 
+        //get data from radio buttons
         data+="\nSex: ";
         RadioGroup radioButtonGroup = (RadioGroup)findViewById(R.id.gendGroup);
         int radioButtonID = radioButtonGroup.getCheckedRadioButtonId();
@@ -157,17 +167,16 @@ public class ViewProfile extends NavigatingActivity  {
             data+= r.getText().toString();
         }
         //System.out.println(data);
+        //save file
         saver.saveToFile(path, "profile.txt", data);
         final Uri file = Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/profile.txt"));
         StorageReference fileRef = mStorageRef.child(userEmail+"/profile.txt");
+        //upload file to firebase
         fileRef.putFile(file);
 
+        //let user know file has been saved
         TextView saved = (TextView)findViewById(R.id.savedTxt);
         saved.setVisibility(View.VISIBLE);
-        //TODO
-        //file writing/upload/download
-        //create default profile.txt upon creating user
-        //check connection - then get profile from Firebase, otherwise locally
 
     }
 }

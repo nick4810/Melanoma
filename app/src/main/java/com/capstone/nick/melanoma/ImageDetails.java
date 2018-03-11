@@ -38,21 +38,23 @@ public class ImageDetails extends NavigatingActivity {
 
         filename = getIntent().getExtras().getString("FILE");
         path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/JPEG Images/";
-        String tmpFile ="JPEG";
+        String tmpFile ="JPEG";//string for filename
         tmpFile+=filename.substring(3);
         tmpFile+=".jpg";
         Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(path+tmpFile), 150, 200);
         ImageView img = (ImageView)findViewById(R.id.image_taken);
-        img.setImageBitmap(thumbnail);
+        img.setImageBitmap(thumbnail);//set thumbnail into image view
 
-        filename+=".txt";
+        filename+=".txt";//string for txt file
         date = getIntent().getExtras().getString("DATE");
         time = getIntent().getExtras().getString("TIME");
         super.onCreateDrawer(loggedIn, userEmail);
 
+        //set dropdown selection
         Spinner mySpinner = (Spinner)findViewById(R.id.img_location);
         mySpinner.setSelection(((ArrayAdapter)mySpinner.getAdapter()).getPosition(location));
 
+        //set date/time into edittexts
         EditText setDet = (EditText)findViewById(R.id.img_date);
         setDet.setText(date, TextView.BufferType.EDITABLE);
         setDet = (EditText)findViewById(R.id.img_time);
@@ -75,6 +77,7 @@ public class ImageDetails extends NavigatingActivity {
         String data = "";
         path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/";
 
+        //gather data entered
         data+="Date: ";
         EditText dataSource = (EditText)findViewById(R.id.img_date);
         data+= dataSource.getText().toString();
@@ -88,6 +91,7 @@ public class ImageDetails extends NavigatingActivity {
         dataSource = (EditText)findViewById(R.id.img_notes);
         data+= dataSource.getText().toString();
 
+        //save file
         if(!saver.saveToFile(path, filename, data)) {
             System.out.println("Error saving file");
         }

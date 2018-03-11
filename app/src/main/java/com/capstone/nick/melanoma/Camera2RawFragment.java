@@ -534,6 +534,7 @@ public class Camera2RawFragment extends Fragment
                                      long timestamp, long frameNumber) {
             String currentDateTime = generateTimestamp();
 
+            //create directories for jpeg and raw photos
             File storageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
             File mGalleryFolder = new File(storageDirectory, userEmail);
             mGalleryFolder = new File(mGalleryFolder, "JPEG Images");
@@ -612,6 +613,8 @@ public class Camera2RawFragment extends Fragment
             intent.putExtra("DATE", date);
             intent.putExtra("TIME", time);
 
+            //This 2 second timer is used to wait for the 'file save' sync task to finish. If the
+            //activity switches too soon the process will be killed and files not saved.
             Handler handler = new Handler();
             Runnable r = new Runnable() {
                 public void run() {

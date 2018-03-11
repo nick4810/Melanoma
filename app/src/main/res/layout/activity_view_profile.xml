@@ -5,6 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context="com.capstone.nick.melanoma.ViewProfile">
     <!-- The main content view -->
     <ScrollView
@@ -52,7 +53,7 @@
             android:id="@+id/gendGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="25dp"
             android:orientation="horizontal">
 
@@ -171,10 +172,9 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginStart="100dp"
             android:onClick="onClick"
+            android:layout_gravity="center_horizontal"
             android:text="Save Changes"/>
-
 
 
     </LinearLayout>
@@ -190,6 +190,3 @@
         android:layout_gravity="start"
         android:background="#ffeeeeee"/>
 </android.support.v4.widget.DrawerLayout>
-
-
-

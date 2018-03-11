@@ -1,5 +1,18 @@
 package com.capstone.nick.melanoma;
+/*
+**Note: not owner of human body image. Taken from the following source:
+Link: https://commons.wikimedia.org/wiki/File:Human_body_schemes.png
+Author: S.raeder, Creator:"MenschSDermatome" by Uwe Thormann - xfig. Licensed under
+CC BY-SA 3.0 via Wikimedia Commons - https://commons.wikimedia.org/wiki/File:MenschSDermatome.png
+Date: 6 October 2015
+License: Creative Commons Attribution-Share Alike 4.0 International
+    link: https://creativecommons.org/licenses/by-sa/4.0/legalcode
 
+Modifications:
+	Added color, selection boxes, split image in half.
+	Also minor touch ups to fingers/toes/face/etc.
+
+ */
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;

@@ -25,6 +25,7 @@ public class FileHandler {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             StringBuilder stringBuilder = new StringBuilder();
 
+            //read file and create SB of contents
             while((line = bufferedReader.readLine()) !=null) {
                 stringBuilder.append(line + System.getProperty("line.separator"));
             }
@@ -39,6 +40,7 @@ public class FileHandler {
         catch(IOException e) {
             Log.d(TAG, e.getMessage());
         }
+        //return the contents of file as string
         return output;
     }
 
@@ -49,11 +51,13 @@ public class FileHandler {
             if(!file.exists()) {
                 file.createNewFile();
             }
+            //write the input string to file
             FileOutputStream outputStream = new FileOutputStream(file,false);
             outputStream.write(data.getBytes());
 
             outputStream.close();
 
+            //completed successfully
             return true;
             
         }  catch(FileNotFoundException e) {
@@ -61,6 +65,7 @@ public class FileHandler {
         }  catch(IOException e) {
             Log.d(TAG, e.getMessage());
         }
+        //error completing save
         return  false;
 
     }
