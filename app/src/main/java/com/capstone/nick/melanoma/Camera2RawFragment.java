@@ -549,11 +549,11 @@ public class Camera2RawFragment extends Fragment
                 mRawGalleryFolder.mkdirs();
             }
 
-            filename = "RAW_"+currentDateTime;
+            filename = "RAW_" +location +"_" +currentDateTime;
             File rawFile = new File(mRawGalleryFolder,
-                    "RAW_" + currentDateTime + ".dng");
+                    "RAW_" + location + "_" + currentDateTime + ".dng");
             File jpegFile = new File(mGalleryFolder,
-                    "JPEG_" + currentDateTime + ".jpg");
+                    "JPEG_" + location + "_" + currentDateTime + ".jpg");
 
             // Look up the ImageSaverBuilder for this request and update it with the file name
             // based on the capture start time.

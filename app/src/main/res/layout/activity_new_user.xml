@@ -128,16 +128,27 @@
 
         <EditText
             android:id="@+id/newUser_notes"
-            android:layout_width="214dp"
+            android:layout_width="match_parent"
             android:layout_height="130dp"
             android:layout_marginStart="5dp"
+            android:layout_marginEnd="15dp"
             android:layout_marginTop="20dp"
             android:ems="8"
+            android:maxLength="350"
             android:text="Include any other info here"
             android:textSize="14sp"
             android:inputType="textMultiLine"
             tools:layout_editor_absoluteX="40dp"
             tools:layout_editor_absoluteY="365dp" />
+
+            <CheckBox
+                android:id="@+id/newUser_audio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="25dp"
+                android:text="Record audio messages instead of written for each image taken. This setting can be changed later."
+                android:textSize="14dp"/>
 
             <TextView
                 android:layout_width="match_parent"

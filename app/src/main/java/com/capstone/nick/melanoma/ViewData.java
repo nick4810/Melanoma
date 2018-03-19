@@ -238,14 +238,14 @@ public class ViewData extends NavigatingActivity {
                                 String filename2 = "RAW" + viewFile+"txt";
 
                                 final Uri file = Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename));
-                                final Uri file2 = Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename2));
+                                //final Uri file2 = Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename2));
 
                                 StorageReference fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename);
                                 //System.out.println(fileRef.toString());
 
                                 fileRef.putFile(file);
-                                fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename2);
-                                fileRef.putFile(file2);
+                                //fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename2);
+                                //fileRef.putFile(file2);
                                         /*.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                             @Override
                                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

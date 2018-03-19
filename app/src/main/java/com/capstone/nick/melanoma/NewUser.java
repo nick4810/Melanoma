@@ -1,10 +1,13 @@
 package com.capstone.nick.melanoma;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.preference.PreferenceManager;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -58,6 +61,14 @@ public class NewUser extends NavigatingActivity {
     }
 
     public void uploadChanges() {
+        CheckBox audio_chk = (CheckBox)findViewById(R.id.newUser_audio);
+        if(audio_chk.isChecked()) {//user chose to use audio memos, save preference
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor1 = settings.edit();
+            editor1.putBoolean("pref_audio", true);
+            editor1.apply();
+        }
+
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
         FileHandler saver = new FileHandler();

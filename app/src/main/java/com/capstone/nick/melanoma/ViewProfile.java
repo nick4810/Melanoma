@@ -175,8 +175,7 @@ public class ViewProfile extends NavigatingActivity  {
         fileRef.putFile(file);
 
         //let user know file has been saved
-        TextView saved = (TextView)findViewById(R.id.savedTxt);
-        saved.setVisibility(View.VISIBLE);
+        findViewById(R.id.savedTxt).setVisibility(View.VISIBLE);
 
     }
 }

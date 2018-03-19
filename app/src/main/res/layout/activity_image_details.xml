@@ -79,20 +79,85 @@
 
         </LinearLayout>
 
+
+        <LinearLayout
+            android:id="@+id/linear_wrap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <ImageButton
+                    android:id="@+id/recording_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|center_horizontal"
+                    android:visibility="gone"
+                    android:background="@drawable/button_rec_enabled"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <ImageButton
+                    android:id="@+id/stop_button"
+                    android:enabled="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|center_horizontal"
+                    android:visibility="gone"
+                    android:background="@drawable/button_stop_enabled"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <ImageButton
+                    android:id="@+id/play_button"
+                    android:enabled="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|center_horizontal"
+                    android:visibility="gone"
+                    android:background="@drawable/button_play_enabled"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
         <EditText
             android:id="@+id/img_notes"
-            android:layout_width="295dp"
+            android:layout_width="match_parent"
             android:layout_height="93dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="35dp"
             android:labelFor="@id/image_taken"
             android:ems="10"
+            android:maxLength="350"
             android:inputType="textMultiLine"
             android:text="Include any additional details here."
             android:textSize="16sp"/>
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/btn_saveImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

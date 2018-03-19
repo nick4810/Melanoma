@@ -48,11 +48,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         viewHolder.setFilename(fileStr);
 
         //create a more user-friendly title showing date/time
-        String newTitle = fileStr.substring(10,16);
-        newTitle+=fileStr.substring(5,10);
-        newTitle+=fileStr.substring(16,18);
+        //"JPEG_" + location + "_" + yyyy_MM_dd_HH_mm_ss_SSS + ".jpg");
+        int len = fileStr.length();
+        String newTitle =fileStr.substring(5, len-27);
+        newTitle+= fileStr.substring(len-23, len-16);//month, day
+        newTitle+=fileStr.substring(len-27, len-22);//year
+        newTitle+=fileStr.substring(len-16, len-14);//hour
         newTitle+=":";
-        newTitle+=fileStr.substring(19,21);
+        newTitle+=fileStr.substring(len-13, len-11);//min
         viewHolder.title.setText(newTitle);//set imageview title
 
         viewHolder.img.setScaleType(ImageView.ScaleType.CENTER_CROP);
