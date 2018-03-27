@@ -3,13 +3,11 @@ package com.capstone.nick.melanoma;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v13.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.preference.Preference;
+import android.os.Environment;
 import android.view.View;
+
+import java.io.File;
 
 public class SettingsActivity extends NavigatingActivity {
     private boolean loggedIn;
@@ -43,6 +41,8 @@ public class SettingsActivity extends NavigatingActivity {
         intent.putExtra("LOGMEOUT", true);
         intent.putExtra("EMAIL", userEmail);
 
+        final String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/";
+
         builder.setTitle("Confirm Selection")
                 .setMessage("Are you absolutely sure you want to delete your account and all associated files/images?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -50,7 +50,10 @@ public class SettingsActivity extends NavigatingActivity {
                         //go through with deletion
                         //delete firebase data
                         //delete local data
+                        File deleteDir = new File(path);
+                        deleteRecursive(deleteDir);
                         //upon deletion go to main screen
+                        startActivity(intent);
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -60,6 +63,15 @@ public class SettingsActivity extends NavigatingActivity {
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
+
+    }
+
+    private void deleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                deleteRecursive(child);
+
+        fileOrDirectory.delete();
 
     }
 

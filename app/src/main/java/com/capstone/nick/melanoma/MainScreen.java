@@ -2,7 +2,9 @@ package com.capstone.nick.melanoma;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -26,6 +28,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
 
 import static com.google.android.gms.common.SignInButton.COLOR_DARK;
 import static com.google.android.gms.common.SignInButton.SIZE_WIDE;
@@ -81,6 +87,7 @@ public class MainScreen extends NavigatingActivity implements
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
+                .requestProfile()
                 .build();
 
         // Build a GoogleApiClient with access to the Google Sign-In API and the
@@ -122,8 +129,6 @@ public class MainScreen extends NavigatingActivity implements
                 }
             });
         }
-
-
     }
 
 
@@ -182,6 +187,11 @@ public class MainScreen extends NavigatingActivity implements
             GoogleSignInAccount account = result.getSignInAccount(); //account of logged in user
             firebaseAuthWithGoogle(account);
 
+            String profilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/";
+            File chk_profile = new File(profilePath + "profile.txt");
+            if(!chk_profile.exists())
+                buildProfile(account, profilePath);
+
             Intent intent = new Intent(this, ViewData.class);
             intent.putExtra("LOGGEDIN", loggedIn);
             intent.putExtra("EMAIL", account.getEmail());
@@ -192,6 +202,35 @@ public class MainScreen extends NavigatingActivity implements
             super.onCreateDrawer(loggedIn, userEmail);
             updateUI(false);
         }
+    }
+
+    private void buildProfile(GoogleSignInAccount account, String path) {
+        StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+
+        FileHandler saver = new FileHandler();
+        String data = "";
+
+        //get data from Google account
+        data+="First Name: ";
+        data+= account.getGivenName();
+        data+="\nLast Name: ";
+        data+= account.getFamilyName();
+        data+="\nEmail: ";
+        data+= account.getEmail();
+
+        //get data from radio buttons
+        data+="\nSex: ";
+
+        data+="\nDate of Birth: ";
+
+        data+="\nEthnicity: ";
+        //System.out.println(data);
+        //save file
+        saver.saveToFile(path, "profile.txt", data);
+        final Uri file = Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/profile.txt"));
+        StorageReference fileRef = mStorageRef.child(userEmail+"/profile.txt");
+        //upload to firebase
+        fileRef.putFile(file);
     }
 
 

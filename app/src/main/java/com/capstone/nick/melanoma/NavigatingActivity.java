@@ -5,6 +5,7 @@ package com.capstone.nick.melanoma;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +17,7 @@ import android.widget.ListView;
 
 
 class NavigatingActivity extends AppCompatActivity {
-    private ListView mDrawerList;
+    private NavigationView mDrawerList;
     private String[] listOps;
     private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -30,14 +31,15 @@ class NavigatingActivity extends AppCompatActivity {
         loggedIn = userLogged;
         email = userEmail;
 
+        mDrawerList = (NavigationView)findViewById(R.id.navList);
+        mDrawerList.getMenu().clear();
         if(loggedIn){
-            listOps = getResources().getStringArray(R.array.loggedInList);
-
+            mDrawerList.inflateMenu(R.menu.navmenu_loggedin);
+            mDrawerList.inflateHeaderView(R.layout.drawer_header);
         } else {
-            listOps = getResources().getStringArray(R.array.loggedOutList);
+            mDrawerList.inflateMenu(R.menu.navmenu_loggedout);
+            //mDrawerList.inflateHeaderView(R.layout.drawer_header);
         }
-
-        mDrawerList = (ListView)findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
 
@@ -52,43 +54,44 @@ class NavigatingActivity extends AppCompatActivity {
     }
 
     private void addDrawerItems() {
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listOps);
-        mDrawerList.setAdapter(mAdapter);
+        mDrawerList.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // set item as selected to persist highlight
+                        menuItem.setChecked(true);
+                        // close drawer when item is tapped
+                        mDrawerLayout.closeDrawers();
 
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(MainScreen.this, "Good Choice", Toast.LENGTH_SHORT).show();
-                goToActivity(position);
-            }
-        });
-    }
+                        Intent intent = new Intent();
+                        if(loggedIn) {
+                            if(menuItem.getItemId() == R.id.nav_home) {
+                                intent = new Intent(NavigatingActivity.this, MainScreen.class);
+                            } else if(menuItem.getItemId() == R.id.nav_profile) {
+                                intent = new Intent(NavigatingActivity.this, ViewProfile.class);
+                            } else if(menuItem.getItemId() == R.id.nav_myData) {
+                                intent = new Intent(NavigatingActivity.this, ViewData.class);
+                            } else if(menuItem.getItemId() == R.id.nav_settings) {
+                                intent = new Intent(NavigatingActivity.this, SettingsActivity.class);
+                            } else if(menuItem.getItemId() == R.id.nav_logOut) {
+                                intent = new Intent(NavigatingActivity.this, MainScreen.class);
+                                intent.putExtra("LOGMEOUT", true);
+                            }
+                        } else {
+                            if(menuItem.getItemId() == R.id.nav_home) {
+                                intent = new Intent(NavigatingActivity.this, MainScreen.class);
+                            } else if(menuItem.getItemId() == R.id.nav_signUp) {
+                                intent = new Intent(NavigatingActivity.this, NewUser.class);
+                            }
+                        }
+                        intent.putExtra("LOGGEDIN", loggedIn);
+                        intent.putExtra("EMAIL", email);
+                        startActivity(intent);
 
-    private void goToActivity(int numChosen) {
-        Intent intent;
-        if(loggedIn) {//logged in
-            if (numChosen == 0) {//home
-                intent = new Intent(this, MainScreen.class);
-            } else if (numChosen == 1) {//profile
-                intent = new Intent(this, ViewProfile.class);
-            } else if (numChosen == 2) {//data
-                intent = new Intent(this, ViewData.class);
-            } else if (numChosen == 3) {//settings
-                intent = new Intent(this, SettingsActivity.class);
-            } else {//log out
-                intent = new Intent(this, MainScreen.class);
-                intent.putExtra("LOGMEOUT", true);
-            }
-        } else {//not logged in
-            if (numChosen == 0) {//home
-                intent = new Intent(this, MainScreen.class);
-            } else {//login
-                intent = new Intent(this, NewUser.class);
-            }
-        }
-        intent.putExtra("LOGGEDIN", loggedIn);
-        intent.putExtra("EMAIL", email);
-        startActivity(intent);
+                        return true;
+                    }
+                });
+
     }
 
     private void setupDrawer() {

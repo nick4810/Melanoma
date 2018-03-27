@@ -37,6 +37,7 @@ public class ImageDetails extends NavigatingActivity {
     private String date;
     private String time;
 
+    private boolean useAudioMemo;
     private ImageButton recordingButton;
     private ImageButton stopButton;
     private ImageButton playButton;
@@ -58,7 +59,7 @@ public class ImageDetails extends NavigatingActivity {
         setContentView(R.layout.activity_image_details);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean useAudioMemo = sharedPreferences.getBoolean("pref_audio", false);
+        useAudioMemo = sharedPreferences.getBoolean("pref_audio", false);
         if(useAudioMemo) {//wants to use audio memos, not textual
             //hide text box
             findViewById(R.id.img_notes).setVisibility(View.GONE);
@@ -127,7 +128,7 @@ public class ImageDetails extends NavigatingActivity {
 
         filename = getIntent().getExtras().getString("FILE");
         path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/";
-        voiceStoragePath = path;
+        voiceStoragePath = path + "Raw Images/";
         path+="JPEG Images/";
 
         //audio file
@@ -161,7 +162,7 @@ public class ImageDetails extends NavigatingActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_saveImage:
-                saveTextFile();
+                saveMemoFile();
         }
 
         Intent intent = new Intent(this, ViewData.class);
@@ -169,6 +170,12 @@ public class ImageDetails extends NavigatingActivity {
         intent.putExtra("EMAIL", userEmail);
 
         startActivity(intent);
+    }
+
+    private void saveMemoFile() {
+        if(!useAudioMemo) {
+            saveTextFile();
+        }
     }
 
     private void saveTextFile() {

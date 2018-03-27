@@ -5,14 +5,18 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -29,6 +33,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import static android.net.ConnectivityManager.TYPE_WIFI;
 
 public class ViewData extends NavigatingActivity {
     private boolean loggedIn;
@@ -185,18 +191,6 @@ public class ViewData extends NavigatingActivity {
                                 deleted = file.delete();
                                 if(deleted) System.out.println("deleted: "+filename);
 
-                                /*.addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        // File deleted successfully
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        // Uh-oh, an error occurred!
-                                    }
-                                });*/
-
                             }
                             //make images not selectable
                             findViewById(R.id.btnUpload).setVisibility(View.GONE);
@@ -216,51 +210,60 @@ public class ViewData extends NavigatingActivity {
                     })
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
-            //for(__ in adapter.hashmap)
-            //delete/upload
 
         }
     }
 
     public void uploadSelected() {
         if(adapter.selViews.size()!=0) {
-            AlertDialog.Builder builder;
+            final AlertDialog.Builder builder;
             builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            final boolean useWifiOnly = sharedPreferences.getBoolean("pref_wifiOnly", false);
+
+            final Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            settingsIntent.putExtra("LOGGEDIN", loggedIn);
+            settingsIntent.putExtra("EMAIL", userEmail);
 
             builder.setTitle("Confirm Selection")
                     .setMessage("Are you sure you want to upload the selected?")
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            // continue with upload
-                            for (MyAdapter.ViewHolder view : adapter.selViews) {
-                                String viewFile =view.filename.substring(4, view.filename.length()-3);
-                                String filename = "RAW" + viewFile+"dng";
-                                String filename2 = "RAW" + viewFile+"txt";
+                            if(useWifiOnly) {//wants to use wifi only, not cellular data
+                                ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                                NetworkInfo networkInfo = null;
+                                if (connMgr != null) {
+                                    networkInfo = connMgr.getActiveNetworkInfo();
+                                }
+                                if(networkInfo !=null && networkInfo.getType() !=TYPE_WIFI) {
+                                    //notify user that pref is set to wifi-only, and no wifi was detected
+                                    builder.setTitle("No Connection")
+                                            .setMessage("Wi-Fi connection needed in order to proceed. This can be changed in the Settings.")
+                                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    //do nothing
+                                                }
+                                            })
+                                            .setNegativeButton("Settings", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // go to settings page
+                                                    startActivity(settingsIntent);
+                                                }
+                                            })
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .show();
 
-                                final Uri file = Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename));
-                                //final Uri file2 = Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename2));
-
-                                StorageReference fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename);
-                                //System.out.println(fileRef.toString());
-
-                                fileRef.putFile(file);
-                                //fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename2);
-                                //fileRef.putFile(file2);
-                                        /*.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                            @Override
-                                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                                // Get a URL to the uploaded content
-                                                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception exception) {
-                                                // Handle unsuccessful uploads
-                                                // ...
-                                            }
-                                        });*/
-
+                                } else {
+                                    // has wifi, continue with upload
+                                    for (MyAdapter.ViewHolder view : adapter.selViews) {
+                                        uploadToFirebase(view);
+                                    }
+                                }
+                            } else {
+                                // pref not set, continue with upload
+                                for (MyAdapter.ViewHolder view : adapter.selViews) {
+                                    uploadToFirebase(view);
+                                }
                             }
                             //make images non-selectable
                             findViewById(R.id.btnUpload).setVisibility(View.GONE);
@@ -281,10 +284,41 @@ public class ViewData extends NavigatingActivity {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
 
-            //for(__ in adapter.hashmap)
-            //delete/upload
+        }
+    }
+
+    private void uploadToFirebase(MyAdapter.ViewHolder view) {
+        String viewFile =view.filename.substring(4, view.filename.length()-3);
+        String filename = "RAW" + viewFile+"dng";
+        String filename_txt = "RAW" + viewFile+"txt";
+        String filename_aud = "RAW" + viewFile+"3gpp";
+
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/";
+        final Uri file = Uri.fromFile(new File(path+filename));
+        final Uri file_txt = Uri.fromFile(new File(path+filename_txt));
+        final Uri file_aud = Uri.fromFile(new File(path+filename_aud));
+
+        File chk_txt = new File(path + filename_txt);
+        File chk_aud = new File(path + filename_aud);
+
+
+        StorageReference fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename);
+        //System.out.println(fileRef.toString());
+
+
+        fileRef.putFile(file);
+        if(chk_txt.exists()) {
+            fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename_txt);
+            fileRef.putFile(file_txt);
+            System.out.println("txt exists");
+
+        } else if(chk_aud.exists()) {
+            fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename_aud);
+            fileRef.putFile(file_aud);
+            System.out.println("aud exists");
 
         }
+
     }
 
 }
