@@ -67,7 +67,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         viewHolder.img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,"Image",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context,"Image",Toast.LENGTH_SHORT).show();
                 //show bigger view of image
             }
         });
@@ -75,9 +75,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         viewHolder.chkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,"Checked",Toast.LENGTH_SHORT).show();
-                selViews.add(viewHolder);
-                //if(!isChecked()) add to list of selected images
+                boolean isChecked = ((CheckBox)v).isChecked();
+                if(isChecked) {//add to list of selected images
+                    selViews.add(viewHolder);
+                    //Toast.makeText(context,String.valueOf(selViews.size()),Toast.LENGTH_SHORT).show();
+                } else { //already checked, remove selection
+                    selViews.remove(viewHolder);
+                    //Toast.makeText(context,String.valueOf(selViews.size()),Toast.LENGTH_SHORT).show();
+                }
             }
         });
         viewHolder.chkBox.setVisibility(View.INVISIBLE);

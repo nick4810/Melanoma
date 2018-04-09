@@ -89,6 +89,7 @@ public class ViewData extends NavigatingActivity {
                         view.chkBox.setChecked(false);
                         view.chkBox.setVisibility(View.GONE);
                     }
+                    adapter.selViews.clear();
 
                 }
             }
@@ -110,14 +111,7 @@ public class ViewData extends NavigatingActivity {
     private ArrayList<CreateList> prepareData(){
 
         ArrayList<CreateList> theimage = new ArrayList<>();
-/*
-        for(int i = 0; i< image_titles.length; i++){
-            CreateList createList = new CreateList();
-            createList.setImage_title(image_titles[i]);
-            createList.setImage_ID(image_ids[i]);
-            theimage.add(createList);
-        }
-*/
+
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/JPEG Images/";//specify path
         //System.out.println(path);
 
@@ -141,10 +135,13 @@ public class ViewData extends NavigatingActivity {
         switch (v.getId()) {
             case R.id.btnCam:
                 addData();
+                break;
             case R.id.btnTrash:
                 delSelected();
+                break;
             case R.id.btnUpload:
                 uploadSelected();
+                break;
         }
     }
 

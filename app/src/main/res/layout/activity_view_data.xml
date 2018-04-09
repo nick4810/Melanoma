@@ -86,7 +86,7 @@ tools:context="com.capstone.nick.melanoma.ViewData">
 <!-- The navigation drawer -->
     <android.support.design.widget.NavigationView
         android:id="@+id/navList"
-        android:layout_width="200dp"
+        android:layout_width="215dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="#ffeeeeee"/>
