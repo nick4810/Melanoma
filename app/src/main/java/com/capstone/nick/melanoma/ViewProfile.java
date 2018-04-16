@@ -1,20 +1,14 @@
 package com.capstone.nick.melanoma;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,19 +16,25 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
 
 //TODO
-//file writing/upload/download
 //check connection - then get profile from Firebase, otherwise locally
+
+/**
+ * Activity to view the user's profile data. Displays information such as name, dob, ethnicity, etc.
+ * User can modify some of these fields, but others are pulled from their Google account. If the
+ * questionnaire was completed when they signed up, that data is displayed here.
+ */
 public class ViewProfile extends NavigatingActivity  {
     private boolean loggedIn;
     private String  userEmail;
     private StorageReference mStorageRef;
 
     @Override
+    /**
+     * When activity created, all data pulled from profile.txt is displayed.
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_profile);
@@ -60,6 +60,9 @@ public class ViewProfile extends NavigatingActivity  {
 
     }
 
+    /**
+     * Loads data from profile.txt into the appropriate fields.
+     */
     private void loadProfile() {
         StorageReference fileRef = mStorageRef.child(userEmail+"/profile.txt");
 
@@ -117,6 +120,10 @@ public class ViewProfile extends NavigatingActivity  {
 
     }
 
+    /**
+     * When button pressed on this screen, currently used to save updates and reupload profile.txt
+     * @param v is used to identify the button that was pressed
+     */
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.saveDets:
@@ -124,6 +131,10 @@ public class ViewProfile extends NavigatingActivity  {
         }
     }
 
+    /**
+     * When the user makes changes, this will save them to their profile.txt, and will upload the
+     * file into Firebase.
+     */
     private void uploadChanges() {
         FileHandler saver = new FileHandler();
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/";

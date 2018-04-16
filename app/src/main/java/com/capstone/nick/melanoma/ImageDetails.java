@@ -8,10 +8,8 @@ import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.media.ThumbnailUtils;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -27,6 +25,11 @@ import android.widget.TextView;
 
 import java.io.IOException;
 
+/**
+ * Activity to display details of the image that was just taken. At this point the user has the
+ * option to add additional textual notes, or if they have changed the setting, they can record an
+ * audio message.
+ */
 public class ImageDetails extends NavigatingActivity {
     private boolean loggedIn;
     private String userEmail;
@@ -54,6 +57,12 @@ public class ImageDetails extends NavigatingActivity {
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
 
     @Override
+    /**
+     * On activity creation, a thumbnail of the image is shown, along with the date/time that the
+     * image was taken. It also displays the body location that was previously selected, and gives
+     * the user the option to change this via a dropdown box. Either a text box or audio buttons
+     * will be displayed depending on the setting.
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_details);
@@ -159,6 +168,11 @@ public class ImageDetails extends NavigatingActivity {
 
     }
 
+    /**
+     * When a button is pressed on this screen. Currently used for when the user is done, as this
+     * will take them back to the 'display images' screen.
+     * @param v
+     */
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_saveImage:
@@ -172,12 +186,19 @@ public class ImageDetails extends NavigatingActivity {
         startActivity(intent);
     }
 
+    /**
+     * Depending on their preference, this will save the text file of the additional notes.
+     */
     private void saveMemoFile() {
         if(!useAudioMemo) {
             saveTextFile();
         }
     }
 
+    /**
+     * Saves all of the data pertaining to the image in a text file. Filename is the same as the
+     * image filename.
+     */
     private void saveTextFile() {
         FileHandler saver = new FileHandler();
         String data = "";
@@ -204,6 +225,9 @@ public class ImageDetails extends NavigatingActivity {
     }
 
     @Override
+    /**
+     * Used to request permissions for recording audio memos.
+     */
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode){
@@ -218,6 +242,9 @@ public class ImageDetails extends NavigatingActivity {
 
     }
 
+    /**
+     * Uses the MediaRecorder, starts the recording and disables buttons not currently needed.
+     */
     private void startAudioRecording(){
         try {
             mediaRecorder.prepare();
@@ -231,6 +258,9 @@ public class ImageDetails extends NavigatingActivity {
         stopButton.setBackgroundResource(R.drawable.button_stop_enabled);
     }
 
+    /**
+     * Stops the recording and disables buttons not currently needed.
+     */
     private void stopAudioRecording(){
         if(mediaRecorder != null){
             mediaRecorder.stop();
@@ -243,6 +273,9 @@ public class ImageDetails extends NavigatingActivity {
         playButton.setBackgroundResource(R.drawable.button_play_enabled);
     }
 
+    /**
+     * Plays the audio file that the user just recorded and disables buttons not currently needed.
+     */
     private void playLastStoredAudioMusic(){
         mediaPlayer = new MediaPlayer();
         try {
@@ -276,6 +309,9 @@ public class ImageDetails extends NavigatingActivity {
         }
     }
 
+    /**
+     * Sets up the MediaRecorder with details specified.
+     */
     private void initializeMediaRecord(){
         mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);

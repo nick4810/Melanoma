@@ -20,8 +20,8 @@
 
     <array name="loggedInList">
         <item>Home</item>
-        <item>My Profile</item>
-        <item>My Data</item>
+        <item>Profile</item>
+        <item>Gallery</item>
         <item>Settings</item>
         <item>Log Out</item>
     </array>

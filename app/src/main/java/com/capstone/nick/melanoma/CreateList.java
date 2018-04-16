@@ -1,23 +1,18 @@
 package com.capstone.nick.melanoma;
 
+/**
+ * An object for storing the title/label of each image taken. Used in creating lists of images.
+ */
 public class CreateList {
 
     private String image_title;
-    private Integer image_id;
 
     public String getImage_title() {
         return image_title;
     }
 
-    public void setImage_title(String android_version_name) {
-        this.image_title = android_version_name;
+    public void setImage_title(String imTitle) {
+        this.image_title = imTitle;
     }
 
-    public Integer getImage_ID() {
-        return image_id;
-    }
-
-    public void setImage_ID(Integer android_image_url) {
-        this.image_id = android_image_url;
-    }
 }

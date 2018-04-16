@@ -9,11 +9,18 @@ import android.view.View;
 
 import java.io.File;
 
+/**
+ * Activity that displays the 'Settings' screen. Shows preferences available to user, along with
+ * other options.
+ */
 public class SettingsActivity extends NavigatingActivity {
     private boolean loggedIn;
     private String userEmail;
 
     @Override
+    /**
+     * Displays all settings/options to user.
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
@@ -24,6 +31,10 @@ public class SettingsActivity extends NavigatingActivity {
 
     }
 
+    /**
+     * When button pressed on this screen, currently used for 'Delete Account' option
+     * @param v is used to identify the button that was pressed
+     */
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.delAccount:
@@ -31,6 +42,11 @@ public class SettingsActivity extends NavigatingActivity {
         }
     }
 
+    /**
+     * The option to delete the users account. This will delete all local files on their device, log
+     * them out, and return them to the main menu.
+     * Note: currently this does not delete all images in Firebase
+     */
     private void deleteAccount() {
         //confirm before deleting account
         AlertDialog.Builder builder;
@@ -66,6 +82,10 @@ public class SettingsActivity extends NavigatingActivity {
 
     }
 
+    /**
+     * Deletes all files in directory
+     * @param fileOrDirectory
+     */
     private void deleteRecursive(File fileOrDirectory) {
         if (fileOrDirectory.isDirectory())
             for (File child : fileOrDirectory.listFiles())

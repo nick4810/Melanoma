@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -37,10 +36,10 @@ import static com.google.android.gms.common.SignInButton.COLOR_DARK;
 import static com.google.android.gms.common.SignInButton.SIZE_WIDE;
 
 /**
- * Activity to demonstrate basic retrieval of the Google user's ID, email address, and basic
- * profile.
- * Credit to developers.google.com for this basic implementation
- * of a Google Login system
+ * Main screen of application. Can be used to display logos, designs, sign-in screen, etc.
+ * Basic retrieval of the Google user's ID, email address, and profile. If a user was previously
+ * signed in, and that sign-in is still cached in system, user will be automatically logged-in.
+ * Credit to developers.google.com for this implementation of a Google Login system.
  */
 public class MainScreen extends NavigatingActivity implements
         GoogleApiClient.OnConnectionFailedListener,
@@ -60,6 +59,11 @@ public class MainScreen extends NavigatingActivity implements
     private String userEmail;
 
     @Override
+    /**
+     * On activity creation, shows welcome screen/message, sign-in options, etc. If redirected here
+     * from another activity by the 'Sign Out' option, user will be signed out of application and
+     * Google account.
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
@@ -133,6 +137,9 @@ public class MainScreen extends NavigatingActivity implements
 
 
     @Override
+    /**
+     * Google method to start sign-in
+     */
     public void onStart() {
         super.onStart();
 
@@ -159,12 +166,18 @@ public class MainScreen extends NavigatingActivity implements
     }
 
     @Override
+    /**
+     * Google method to resume sign-in process
+     */
     protected void onResume() {
         super.onResume();
         hideProgressDialog();
     }
 
     @Override
+    /**
+     * Google method called upon receiving sign-in result
+     */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -175,6 +188,11 @@ public class MainScreen extends NavigatingActivity implements
         }
     }
 
+    /**
+     * Google method to handle sign-in result. If signed in the nav drawer updates to reflect this,
+     * and a Firebase entry is created/accessed.
+     * @param result The sign-in result returned by the GoogleSignIn process
+     */
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
@@ -204,6 +222,10 @@ public class MainScreen extends NavigatingActivity implements
         }
     }
 
+    /**
+     * Gather data from the user's Google account to create an initial profile.txt.
+     * This data is saved in their profile.txt file in the root of their directory.
+     */
     private void buildProfile(GoogleSignInAccount account, String path) {
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
 
@@ -234,12 +256,19 @@ public class MainScreen extends NavigatingActivity implements
     }
 
 
+    /**
+     * Start the sign-in process
+     */
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
 
+    /**
+     * Handles the Firebase sign-in
+     * @param acct Google account that was used to sign in
+     */
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
@@ -262,34 +291,10 @@ public class MainScreen extends NavigatingActivity implements
     }
 
 
-    private void signOut() {
-        FirebaseAuth.getInstance().signOut();
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        loggedIn=true;
-                        MainScreen.super.onCreateDrawer(loggedIn, userEmail);
-                        updateUI(false);
-                    }
-                });
-    }
-
-
-    private void revokeAccess() {
-        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        // [START_EXCLUDE]
-                        updateUI(false);
-                        // [END_EXCLUDE]
-                    }
-                });
-    }
-
-
     @Override
+    /**
+     * Connection failed when trying to sign in
+     */
     public void onConnectionFailed(ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
@@ -297,6 +302,9 @@ public class MainScreen extends NavigatingActivity implements
     }
 
     @Override
+    /**
+     * Stopping the sign-in process
+     */
     protected void onStop() {
         super.onStop();
         if (mProgressDialog != null) {
@@ -304,6 +312,9 @@ public class MainScreen extends NavigatingActivity implements
         }
     }
 
+    /**
+     * Showing progress of sign-in
+     */
     private void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
@@ -314,12 +325,19 @@ public class MainScreen extends NavigatingActivity implements
         mProgressDialog.show();
     }
 
+    /**
+     * Hiding progress of sign-in
+     */
     private void hideProgressDialog() {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.hide();
         }
     }
 
+    /**
+     * Update the activity based on signed-in status
+     * @param signedIn status of sign-in
+     */
     private void updateUI(boolean signedIn) {
         if (signedIn) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
@@ -331,6 +349,11 @@ public class MainScreen extends NavigatingActivity implements
     }
 
     @Override
+    /**
+     * When button pressed on this screen, currently used to start the Google sign-in process, or
+     * swap to the new-user sign up page.
+     * @param v is used to identify the button that was pressed
+     */
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:

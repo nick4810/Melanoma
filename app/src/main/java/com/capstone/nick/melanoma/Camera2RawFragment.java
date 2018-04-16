@@ -15,8 +15,6 @@ package com.capstone.nick.melanoma;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * TODO:
- * known issue: images very dark in low-light conditions/flash 'flashing' but not adding light
  */
 
 
@@ -74,8 +72,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -655,6 +651,13 @@ public class Camera2RawFragment extends Fragment
         }
     };
 
+    /**
+     * A constructor method so that arguments can be passed.
+     * @param email User's email address
+     * @param log If they are logged in or not
+     * @param loc Body location that was selected
+     * @return Returns fragment now that fields are set
+     */
     public static Camera2RawFragment newInstance(String email, Boolean log, String loc) {
         Camera2RawFragment c = new Camera2RawFragment();
         userEmail = email;

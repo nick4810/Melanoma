@@ -41,6 +41,11 @@ import java.io.File;
 import static com.google.android.gms.common.SignInButton.COLOR_DARK;
 import static com.google.android.gms.common.SignInButton.SIZE_WIDE;
 
+/**
+ * An activity that allows new users to sign-up for the service. It offers them a form to fill out
+ * to collect personal data in order to help with future diagnoses. The user can then complete their
+ * sign-up by connecting their Google account.
+ */
 public class NewUser extends NavigatingActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
@@ -60,6 +65,10 @@ public class NewUser extends NavigatingActivity implements
     private StorageReference mStorageRef;
 
     @Override
+    /**
+     * When the activity is launched, form is displayed, client is built for Google sign-in, and
+     * styling of buttons changed.
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_user);
@@ -69,7 +78,6 @@ public class NewUser extends NavigatingActivity implements
 
         /*TODO
         ** new users log in with google, load data submitted into database
-        ** when creating user from main screen, create default profile.txt
          */
         super.onCreateDrawer(loggedIn, userEmail);
 
@@ -93,6 +101,10 @@ public class NewUser extends NavigatingActivity implements
     }
 
     @Override
+    /**
+     * When button pressed on this screen, currently used to start the Google sign-in process
+     * @param v is used to identify the button that was pressed
+     */
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button_newUser:
@@ -102,6 +114,9 @@ public class NewUser extends NavigatingActivity implements
 
     }
 
+    /**
+     * Start the sign-in process, capture the data entered on completion
+     */
     public void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -111,6 +126,11 @@ public class NewUser extends NavigatingActivity implements
         }
     }
 
+    /**
+     * Collect the data that the user entered into the form, along with the preferences that were
+     * selected. This data is saved in their profile.txt file in the root of their directory. After
+     * file is saved, go to the default 'View Images' screen.
+     */
     public void uploadChanges() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor1 = settings.edit();
@@ -180,6 +200,9 @@ public class NewUser extends NavigatingActivity implements
 
 
     @Override
+    /**
+     * Google method to start sign-in
+     */
     public void onStart() {
         super.onStart();
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
@@ -205,12 +228,18 @@ public class NewUser extends NavigatingActivity implements
     }
 
     @Override
+    /**
+     * Google method to resume sign-in process
+     */
     protected void onResume() {
         super.onResume();
         hideProgressDialog();
     }
 
     @Override
+    /**
+     * Google method called upon receiving sign-in result
+     */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -221,6 +250,11 @@ public class NewUser extends NavigatingActivity implements
         }
     }
 
+    /**
+     * Google method to handle sign-in result. If signed in the nav drawer updates to reflect this,
+     * and a Firebase entry is created/accessed.
+     * @param result The sign-in result returned by the GoogleSignIn process
+     */
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
@@ -246,7 +280,10 @@ public class NewUser extends NavigatingActivity implements
     }
 
 
-
+    /**
+     * Handles the Firebase sign-in
+     * @param acct Google account that was used to sign in
+     */
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
@@ -269,34 +306,10 @@ public class NewUser extends NavigatingActivity implements
     }
 
 
-    private void signOut() {
-        FirebaseAuth.getInstance().signOut();
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        loggedIn=true;
-                        NewUser.super.onCreateDrawer(loggedIn, userEmail);
-                        //updateUI(false);
-                    }
-                });
-    }
-
-
-    private void revokeAccess() {
-        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        // [START_EXCLUDE]
-                        //updateUI(false);
-                        // [END_EXCLUDE]
-                    }
-                });
-    }
-
-
     @Override
+    /**
+     * Connection failed when trying to sign in
+     */
     public void onConnectionFailed(ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
@@ -304,6 +317,9 @@ public class NewUser extends NavigatingActivity implements
     }
 
     @Override
+    /**
+     * Stopping the sign-in process
+     */
     protected void onStop() {
         super.onStop();
         if (mProgressDialog != null) {
@@ -311,6 +327,9 @@ public class NewUser extends NavigatingActivity implements
         }
     }
 
+    /**
+     * Showing progress of sign-in
+     */
     private void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
@@ -321,6 +340,9 @@ public class NewUser extends NavigatingActivity implements
         mProgressDialog.show();
     }
 
+    /**
+     * Hiding progress of sign-in
+     */
     private void hideProgressDialog() {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.hide();

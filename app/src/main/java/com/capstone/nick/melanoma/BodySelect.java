@@ -1,6 +1,6 @@
 package com.capstone.nick.melanoma;
 /*
-**Note: not owner of human body image. Taken from the following source:
+Note: not owner of human body image. Taken from the following source:
 Link: https://commons.wikimedia.org/wiki/File:Human_body_schemes.png
 Author: S.raeder, Creator:"MenschSDermatome" by Uwe Thormann - xfig. Licensed under
 CC BY-SA 3.0 via Wikimedia Commons - https://commons.wikimedia.org/wiki/File:MenschSDermatome.png
@@ -13,13 +13,10 @@ Modifications:
 	Also minor touch ups to fingers/toes/face/etc.
 
  */
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -30,6 +27,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * An activity to display a human body image where the user can select
+ * the location that they are photoing.
+ */
 public class BodySelect extends NavigatingActivity implements View.OnTouchListener {
 
     private boolean loggedIn;
@@ -41,6 +42,10 @@ public class BodySelect extends NavigatingActivity implements View.OnTouchListen
 
 
     @Override
+    /**
+     * When activity is created, body image for selection is shown, along with a toggle switch for
+     * front/back, and 'Next' is displayed in top-right of screen to progress.
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_body_select);
@@ -79,7 +84,6 @@ public class BodySelect extends NavigatingActivity implements View.OnTouchListen
                 imageView.setTag (nextImage);
             }
         });
-        //toast ("Touch the screen to discover where the regions are.");
 
 
         final Intent intent = new Intent(this, AddData.class);
@@ -100,10 +104,8 @@ public class BodySelect extends NavigatingActivity implements View.OnTouchListen
 
     /**
      * Respond to the user touching the screen.
-     * Change images to make things appear and disappear from the screen.
-     *
+     * Change selected location based on where the user touched.
      */
-
     public boolean onTouch (View v, MotionEvent ev)
     {
         boolean handledHere;
@@ -198,7 +200,6 @@ public class BodySelect extends NavigatingActivity implements View.OnTouchListen
                     if (!front) locationText.setText(locations[7]);
                 }
 
-
                 handledHere = true;
                 break;
 
@@ -212,20 +213,16 @@ public class BodySelect extends NavigatingActivity implements View.OnTouchListen
     /**
      * Resume the activity.
      */
-
     @Override protected void onResume() {
         super.onResume();
 
     }
 
 
-// More methods
-
     /**
      * Get the color from the hotspot image at point x-y.
      *
      */
-
     public int getHotspotColor (int hotspotId, int x, int y) {
         ImageView img = (ImageView) findViewById (hotspotId);
         if (img == null) {
@@ -244,26 +241,11 @@ public class BodySelect extends NavigatingActivity implements View.OnTouchListen
         }
     }
 
-    /**
-     * Show a string on the screen via Toast.
-     *
-     * @param msg String
-     * @return void
-     */
-
-    public void toast (String msg)
-    {
-        Toast.makeText (getApplicationContext(), msg, Toast.LENGTH_LONG).show ();
-    }
-
 }
 
 /**
  * A class with methods to help with colors.
- * (Only one method so far.)
- *
  */
-
 class ColorTool {
 
     /**
@@ -275,7 +257,6 @@ class ColorTool {
      * @param tolerance int - the max difference that is allowed for any of the RGB components
      * @return boolean
      */
-
     boolean closeMatch(int color1, int color2, int tolerance) {
         if (Math.abs (Color.red (color1) - Color.red (color2)) > tolerance ) return false;
         if (Math.abs (Color.green (color1) - Color.green (color2)) > tolerance ) return false;

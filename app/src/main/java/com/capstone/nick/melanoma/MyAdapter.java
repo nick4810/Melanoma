@@ -4,7 +4,6 @@ package com.capstone.nick.melanoma;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,11 +12,13 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.io.File;
 import java.util.ArrayList;
 
+/**
+ * This class is used to populate the recyclerview for the image gallery. It stores lists of images,
+ * selected images, sets thumbnails, etc. It is also used to register the onClickListeners, and
+ * create the image titles that are more user-friendly.
+ */
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private ArrayList<CreateList> galleryList;
 
@@ -35,6 +36,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     @Override
+    /**
+     * When new image added, add to recyclerview for viewing and to total list of images.
+     */
     public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_layout, viewGroup, false);
         ViewHolder temp = new ViewHolder(view);
@@ -43,6 +47,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     @Override
+    /**
+     * Set the image title, thumbnail, onClickListeners
+     */
     public void onBindViewHolder(final MyAdapter.ViewHolder viewHolder, int i) {
         String fileStr =galleryList.get(i).getImage_title();
         viewHolder.setFilename(fileStr);
@@ -88,6 +95,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         viewHolder.chkBox.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * Used to create thumbnails for images
+     * @param path Image file directory
+     * @param reqWidth Requested width of thumbnail
+     * @param reqHeight Requested height of thumbnail
+     * @return Bitmap for thumbnail
+     */
     private Bitmap decodeSampledBitmapFromResource(String path, int reqWidth, int reqHeight) {
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -102,6 +116,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return BitmapFactory.decodeFile(path, options);
     }
 
+    /**
+     * Finds the largest number to divide by while still keeping requested width/height
+     * @param options Options for creating Bitmap
+     * @param reqWidth Requested width of thumbnail
+     * @param reqHeight Requested height of thumbnail
+     * @return Largest value for creating smallest thumbnail
+     */
     private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
@@ -129,6 +150,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return galleryList.size();
     }
 
+    /**
+     * This class binds the thumbnail, title, checkbox, and filename to the image itself.
+     */
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView title;
         private ImageView img;

@@ -1,6 +1,4 @@
 package com.capstone.nick.melanoma;
-//Credit to Ben Jakuben (http://blog.teamtreehouse.com/add-navigation-drawer-android)
-//for the basic implementation of a navigation drawer
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -11,11 +9,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
-
+/**
+ * Class representing the navigation drawer. Opens/closes drawer, adds options to drawer, etc.
+ */
 class NavigatingActivity extends AppCompatActivity {
     private NavigationView mDrawerList;
     private String[] listOps;
@@ -27,6 +25,11 @@ class NavigatingActivity extends AppCompatActivity {
     private boolean loggedIn;
     private String email;
 
+    /**
+     * Show the list of options based on whether user is logged in or not.
+     * @param userLogged status of log-in
+     * @param userEmail email address of user
+     */
     protected void onCreateDrawer(boolean userLogged, String userEmail) {
         loggedIn = userLogged;
         email = userEmail;
@@ -53,6 +56,9 @@ class NavigatingActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Start intent based on the user's selection.
+     */
     private void addDrawerItems() {
         mDrawerList.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -98,14 +104,12 @@ class NavigatingActivity extends AppCompatActivity {
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.string.drawer_open, R.string.drawer_close) {
 
-            /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 getSupportActionBar().setTitle("Menu");
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
-            /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 getSupportActionBar().setTitle(mActivityTitle);
