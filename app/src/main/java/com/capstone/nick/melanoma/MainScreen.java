@@ -21,6 +21,8 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -29,6 +31,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 
@@ -56,14 +59,15 @@ public class MainScreen extends NavigatingActivity implements
 
     private boolean loggedIn = false;
     private boolean logMeOut = false;
+    private boolean signMeIn = true;
     private String userEmail;
 
-    @Override
     /**
      * On activity creation, shows welcome screen/message, sign-in options, etc. If redirected here
      * from another activity by the 'Sign Out' option, user will be signed out of application and
      * Google account.
      */
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
@@ -71,6 +75,7 @@ public class MainScreen extends NavigatingActivity implements
         if(getIntent().getExtras() !=null) {
             loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
             logMeOut = getIntent().getExtras().getBoolean("LOGMEOUT");
+            signMeIn = getIntent().getExtras().getBoolean("AUTOSIGN");
             userEmail = getIntent().getExtras().getString("EMAIL");
         }
 
@@ -80,9 +85,6 @@ public class MainScreen extends NavigatingActivity implements
 
         super.onCreateDrawer(loggedIn, userEmail);
         mAuth = FirebaseAuth.getInstance();
-
-        // Views
-        //mStatusTextView = (TextView) findViewById(R.id.status);
 
         // Button listeners
         findViewById(R.id.sign_in_button).setOnClickListener(this);
@@ -103,10 +105,10 @@ public class MainScreen extends NavigatingActivity implements
 
         if (logMeOut){
             final Intent intent = new Intent(this, MainScreen.class);
+            intent.putExtra("AUTOSIGN", false);
             /* TODO:
             ** check parameters needed for this intent
             */
-            intent.putExtra("LOGGEDIN", loggedIn);
             mGoogleApiClient.connect();
             mGoogleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                 @Override
@@ -138,30 +140,32 @@ public class MainScreen extends NavigatingActivity implements
 
     @Override
     /**
-     * Google method to start sign-in
+     * Google method to start a cached "silent" sign-in
      */
     public void onStart() {
         super.onStart();
 
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (opr.isDone()) {
-            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
-            // and the GoogleSignInResult will be available instantly.
-            Log.d(TAG, "Got cached sign-in");
-            GoogleSignInResult result = opr.get();
-            handleSignInResult(result);
-        } else {
-            // If the user has not previously signed in on this device or the sign-in has expired,
-            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
-            // single sign-on will occur in this branch.
-            showProgressDialog();
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(GoogleSignInResult googleSignInResult) {
-                    hideProgressDialog();
-                    handleSignInResult(googleSignInResult);
-                }
-            });
+        if(signMeIn) {
+            OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+            if (opr.isDone()) {
+                // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
+                // and the GoogleSignInResult will be available instantly.
+                Log.d(TAG, "Got cached sign-in");
+                GoogleSignInResult result = opr.get();
+                handleSignInResult(result);
+            } else {
+                // If the user has not previously signed in on this device or the sign-in has expired,
+                // this asynchronous branch will attempt to sign in the user silently.  Cross-device
+                // single sign-on will occur in this branch.
+                showProgressDialog();
+                opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+                    @Override
+                    public void onResult(GoogleSignInResult googleSignInResult) {
+                        hideProgressDialog();
+                        handleSignInResult(googleSignInResult);
+                    }
+                });
+            }
         }
     }
 
@@ -203,17 +207,9 @@ public class MainScreen extends NavigatingActivity implements
             updateUI(true);
             // Google Sign In was successful, authenticate with Firebase
             GoogleSignInAccount account = result.getSignInAccount(); //account of logged in user
+            userEmail = account.getEmail();
             firebaseAuthWithGoogle(account);
 
-            String profilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/";
-            File chk_profile = new File(profilePath + "profile.txt");
-            if(!chk_profile.exists())
-                buildProfile(account, profilePath);
-
-            Intent intent = new Intent(this, ViewData.class);
-            intent.putExtra("LOGGEDIN", loggedIn);
-            intent.putExtra("EMAIL", account.getEmail());
-            startActivity(intent);
         } else {
             // Signed out, show unauthenticated UI.
             loggedIn=false;
@@ -252,7 +248,19 @@ public class MainScreen extends NavigatingActivity implements
         final Uri file = Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/profile.txt"));
         StorageReference fileRef = mStorageRef.child(userEmail+"/profile.txt");
         //upload to firebase
-        fileRef.putFile(file);
+        fileRef.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                //file uploaded
+                //System.out.println("MainScreen uploaded profile to firebase");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                //failed to upload file
+                //System.out.println("MainScreen failed upload of profile to firebase");
+            }
+        });
     }
 
 
@@ -269,8 +277,10 @@ public class MainScreen extends NavigatingActivity implements
      * Handles the Firebase sign-in
      * @param acct Google account that was used to sign in
      */
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+    private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+
+        final Intent intent = new Intent(this, ViewData.class);
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -281,6 +291,17 @@ public class MainScreen extends NavigatingActivity implements
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            String profilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/";
+                            File chk_profile = new File(profilePath + "profile.txt");
+                            if(!chk_profile.exists()) {
+                                //System.out.println("MainScreen building profile");
+                                buildProfile(acct, profilePath);
+                            }
+
+                            intent.putExtra("LOGGEDIN", loggedIn);
+                            intent.putExtra("EMAIL", userEmail);
+                            startActivity(intent);
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());

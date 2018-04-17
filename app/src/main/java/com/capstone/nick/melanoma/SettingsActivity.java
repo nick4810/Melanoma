@@ -5,7 +5,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.view.View;
+
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 
@@ -16,6 +20,8 @@ import java.io.File;
 public class SettingsActivity extends NavigatingActivity {
     private boolean loggedIn;
     private String userEmail;
+
+    private StorageReference mStorageRef;
 
     @Override
     /**
@@ -29,6 +35,7 @@ public class SettingsActivity extends NavigatingActivity {
         userEmail = getIntent().getExtras().getString("EMAIL");
         super.onCreateDrawer(loggedIn, userEmail);
 
+        mStorageRef = FirebaseStorage.getInstance().getReference();
     }
 
     /**
@@ -65,11 +72,20 @@ public class SettingsActivity extends NavigatingActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         //go through with deletion
                         //delete firebase data
+                        StorageReference fileRef = mStorageRef.child(userEmail + "/profile.txt");
+                        try {
+                            fileRef.delete();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         //delete local data
                         File deleteDir = new File(path);
-                        deleteRecursive(deleteDir);
-                        //upon deletion go to main screen
-                        startActivity(intent);
+
+
+                        if(deleteRecursive(deleteDir)) {
+                            //upon deletion go to main screen
+                            startActivity(intent);
+                        }
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -86,12 +102,13 @@ public class SettingsActivity extends NavigatingActivity {
      * Deletes all files in directory
      * @param fileOrDirectory
      */
-    private void deleteRecursive(File fileOrDirectory) {
+    private boolean deleteRecursive(File fileOrDirectory) {
         if (fileOrDirectory.isDirectory())
             for (File child : fileOrDirectory.listFiles())
                 deleteRecursive(child);
 
         fileOrDirectory.delete();
+        return true;
 
     }
 

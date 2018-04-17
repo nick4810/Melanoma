@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 
@@ -30,6 +31,8 @@ public class ViewProfile extends NavigatingActivity  {
     private boolean loggedIn;
     private String  userEmail;
     private StorageReference mStorageRef;
+
+    private boolean gotFile_firebase;
 
     @Override
     /**
@@ -73,11 +76,15 @@ public class ViewProfile extends NavigatingActivity  {
             @Override
             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                 //downloaded file
+                gotFile_firebase =true;
+                //System.out.println("ViewProfile got profile from firebase");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 //failed to download file
+                gotFile_firebase =false;
+                //System.out.println("ViewProfile failed to get profile from firebase");
             }
         });
         //get contents of file
@@ -85,38 +92,40 @@ public class ViewProfile extends NavigatingActivity  {
         String content = reader.readFile(rootPath.toString(), "profile.txt");
         String[] lines = content.split("\\n");
 
-        //set the edittext fields
-        EditText setText = (EditText)findViewById(R.id.editFname);
-        setText.setText(lines[0].substring(12));
-        setText = (EditText)findViewById(R.id.editLname);
-        setText.setText(lines[1].substring(11));
-        setText = (EditText)findViewById(R.id.editEmail);
-        setText.setText(lines[2].substring(7));
-        setText = (EditText)findViewById(R.id.editDOB);
-        setText.setText(lines[4].substring(15));
+        try {
+            //set the edittext fields
+            EditText setText = (EditText) findViewById(R.id.editFname);
+            setText.setText(lines[0].substring(12));
+            setText = (EditText) findViewById(R.id.editLname);
+            setText.setText(lines[1].substring(11));
+            setText = (EditText) findViewById(R.id.editEmail);
+            setText.setText(lines[2].substring(7));
+            setText = (EditText) findViewById(R.id.editDOB);
+            setText.setText(lines[4].substring(15));
 
-        //set the radio button selections
-        String gendStr =lines[3].substring(5);
-        RadioGroup setSel = (RadioGroup)findViewById(R.id.gendGroup);
-        if(gendStr.equals("Male"))
-            setSel.check(R.id.toggleMale);
-        else if(gendStr.equals("Female"))
-            setSel.check(R.id.toggleFemale);
+            //set the radio button selections
+            String gendStr = lines[3].substring(5);
+            RadioGroup setSel = (RadioGroup) findViewById(R.id.gendGroup);
+            if (gendStr.equals("Male"))
+                setSel.check(R.id.toggleMale);
+            else if (gendStr.equals("Female"))
+                setSel.check(R.id.toggleFemale);
 
-        String ethStr =lines[5].substring(11);
-        setSel = (RadioGroup)findViewById(R.id.ethGroup);
-        if(ethStr.equals("Caucasian/White"))
-            setSel.check(R.id.toggle_white);
-        else if(ethStr.equals("African American/Black"))
-            setSel.check(R.id.toggle_black);
-        else if(ethStr.equals("Asian"))
-            setSel.check(R.id.toggle_asian);
-        else if(ethStr.equals("Hispanic"))
-            setSel.check(R.id.toggle_hisp);
-        else if(ethStr.equals("Prefer Not To Answer"))
-            setSel.check(R.id.toggle_prefNo);
-        else if(ethStr.equals("Other"))
-            setSel.check(R.id.toggle_other);
+            String ethStr = lines[5].substring(11);
+            setSel = (RadioGroup) findViewById(R.id.ethGroup);
+            if (ethStr.equals("Caucasian/White"))
+                setSel.check(R.id.toggle_white);
+            else if (ethStr.equals("African American/Black"))
+                setSel.check(R.id.toggle_black);
+            else if (ethStr.equals("Asian"))
+                setSel.check(R.id.toggle_asian);
+            else if (ethStr.equals("Hispanic"))
+                setSel.check(R.id.toggle_hisp);
+            else if (ethStr.equals("Prefer Not To Answer"))
+                setSel.check(R.id.toggle_prefNo);
+            else if (ethStr.equals("Other"))
+                setSel.check(R.id.toggle_other);
+        } catch(Exception e) { e.printStackTrace(); }
 
     }
 
@@ -183,7 +192,19 @@ public class ViewProfile extends NavigatingActivity  {
         final Uri file = Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/profile.txt"));
         StorageReference fileRef = mStorageRef.child(userEmail+"/profile.txt");
         //upload file to firebase
-        fileRef.putFile(file);
+        fileRef.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                //file uploaded
+                //System.out.println("ViewProfile uploaded profile to firebase");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                //failed to upload file
+                //System.out.println("ViewProfile failed upload of profile to firebase");
+            }
+        });
 
         //let user know file has been saved
         findViewById(R.id.savedTxt).setVisibility(View.VISIBLE);
