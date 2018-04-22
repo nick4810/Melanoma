@@ -18,14 +18,15 @@ package com.capstone.nick.melanoma;
 
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.preference.PreferenceManager;
 
 /**
  * Activity displaying a fragment that implements RAW photo captures.
  */
 public class AddData extends Activity {
     private String userEmail;
-    private Boolean loggedIn;
     private String location;
 
     @Override
@@ -33,12 +34,12 @@ public class AddData extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_data);
 
-        userEmail = getIntent().getExtras().getString("EMAIL");
-        loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        userEmail = prefs.getString("USEREMAIL", "");
         location = getIntent().getExtras().getString("LOCATION");
         if (null == savedInstanceState) {
             getFragmentManager().beginTransaction()
-                    .replace(R.id.container, Camera2RawFragment.newInstance(userEmail, loggedIn, location))
+                    .replace(R.id.container, Camera2RawFragment.newInstance(userEmail, location))
                     .commit();
         }
     }

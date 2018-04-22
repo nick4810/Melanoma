@@ -6,8 +6,8 @@ android {
         applicationId "com.capstone.nick.melanoma"
         minSdkVersion 23
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -21,6 +21,7 @@ android {
 dependencies {
     implementation 'com.google.firebase:firebase-storage:11.8.0'
     implementation 'com.android.support:support-v4:25.4.0'
+    implementation 'com.google.firebase:firebase-database:11.8.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -36,6 +37,8 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
 }
+
+
 
 
 

@@ -14,10 +14,12 @@ Modifications:
 
  */
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,7 +35,6 @@ import android.widget.Toast;
  */
 public class BodySelect extends NavigatingActivity implements View.OnTouchListener {
 
-    private boolean loggedIn;
     private String userEmail;
 
     private TextView nextText;
@@ -41,18 +42,18 @@ public class BodySelect extends NavigatingActivity implements View.OnTouchListen
     private Boolean front =true;
 
 
-    @Override
     /**
      * When activity is created, body image for selection is shown, along with a toggle switch for
      * front/back, and 'Next' is displayed in top-right of screen to progress.
      */
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_body_select);
 
-        userEmail = getIntent().getExtras().getString("EMAIL");
-        loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
-        super.onCreateDrawer(loggedIn, userEmail);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        userEmail = prefs.getString("USEREMAIL", "");
+        super.onCreateDrawer();
 
 
         locationText = (TextView)findViewById(R.id.txt_Location);
@@ -93,8 +94,6 @@ public class BodySelect extends NavigatingActivity implements View.OnTouchListen
         nextText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent.putExtra("LOGGEDIN", loggedIn);
-                intent.putExtra("EMAIL", userEmail);
                 intent.putExtra("LOCATION", locationText.getText().toString());
                 startActivity(intent);
             }

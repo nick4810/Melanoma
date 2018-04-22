@@ -60,26 +60,22 @@ public class NewUser extends NavigatingActivity implements
     private GoogleSignInAccount account;
     private boolean signInResult =false;
 
-    private boolean loggedIn;
     private String userEmail;
     private StorageReference mStorageRef;
 
-    @Override
     /**
      * When the activity is launched, form is displayed, client is built for Google sign-in, and
      * styling of buttons changed.
      */
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_user);
 
-        loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
-        boolean logMeOut = getIntent().getExtras().getBoolean("LOGMEOUT");
-
         /*TODO
         ** new users log in with google, load data submitted into database
          */
-        super.onCreateDrawer(loggedIn, userEmail);
+        super.onCreateDrawer();
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -100,11 +96,11 @@ public class NewUser extends NavigatingActivity implements
         signInButton.setOnClickListener(this);
     }
 
-    @Override
     /**
      * When button pressed on this screen, currently used to start the Google sign-in process
      * @param v is used to identify the button that was pressed
      */
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button_newUser:
@@ -193,16 +189,14 @@ public class NewUser extends NavigatingActivity implements
         fileRef.putFile(file);
 
         Intent intent = new Intent(this, ViewData.class);
-        intent.putExtra("LOGGEDIN", loggedIn);
-        intent.putExtra("EMAIL", account.getEmail());
         startActivity(intent);
     }
 
 
-    @Override
     /**
      * Google method to start sign-in
      */
+    @Override
     public void onStart() {
         super.onStart();
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
@@ -227,19 +221,19 @@ public class NewUser extends NavigatingActivity implements
         }
     }
 
-    @Override
     /**
      * Google method to resume sign-in process
      */
+    @Override
     protected void onResume() {
         super.onResume();
         hideProgressDialog();
     }
 
-    @Override
     /**
      * Google method called upon receiving sign-in result
      */
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -258,21 +252,25 @@ public class NewUser extends NavigatingActivity implements
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
-            // Signed in successfully, show authenticated UI.
-            loggedIn=true;
-            super.onCreateDrawer(loggedIn, userEmail);
-            //mStatusTextView.setText(R.string.signed_in_fmt);
-            //updateUI(true);
-            // Google Sign In was successful, authenticate with Firebase
+            // Signed in successfully
             account = result.getSignInAccount(); //account of logged in user
+            userEmail =account.getEmail();
+
+            //set a preference for storing user's name, email
+            SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+            prefEditor.putString("USEREMAIL", userEmail);
+            prefEditor.putString("USERNAME", account.getGivenName()+" "+account.getFamilyName());
+            prefEditor.apply();
+
+            super.onCreateDrawer();
+            // Google Sign In was successful, authenticate with Firebase
             firebaseAuthWithGoogle(account);
 
             signInResult =true;
 
         } else {
             // Signed out, show unauthenticated UI.
-            loggedIn=false;
-            super.onCreateDrawer(loggedIn, userEmail);
+            super.onCreateDrawer();
             //updateUI(false);
 
             signInResult =false;
@@ -306,20 +304,20 @@ public class NewUser extends NavigatingActivity implements
     }
 
 
-    @Override
     /**
      * Connection failed when trying to sign in
      */
+    @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
     }
 
-    @Override
     /**
      * Stopping the sign-in process
      */
+    @Override
     protected void onStop() {
         super.onStop();
         if (mProgressDialog != null) {

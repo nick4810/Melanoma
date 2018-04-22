@@ -18,11 +18,15 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.net.ConnectivityManager.TYPE_WIFI;
 
@@ -32,32 +36,33 @@ import static android.net.ConnectivityManager.TYPE_WIFI;
  * images and delete/upload them. They can also choose to add a new image.
  */
 public class ViewData extends NavigatingActivity {
-    private boolean loggedIn;
     private String userEmail;
 
+    private TextView selText;
     private MyAdapter adapter;
 
     private StorageReference mStorageRef;
+    private FirebaseDatabase mDatabase;
 
     /*TODO
     **known issue: checkboxes not appearing off-screen
-    * refresh after deletion
      */
-    @Override
+
     /**
      * When activity created, all images displayed, also a button to take a new image, and 'Select'
      * text to select multiple images to upload/delete.
      */
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_data);
 
-        loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
-        userEmail = getIntent().getExtras().getString("EMAIL");
-        super.onCreateDrawer(loggedIn, userEmail);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        userEmail = prefs.getString("USEREMAIL", "");
+        super.onCreateDrawer();
 
         //add an option to select images
-        final TextView selText = (TextView)findViewById(R.id.SelectText);
+        selText = (TextView)findViewById(R.id.SelectText);
         selText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,9 +75,6 @@ public class ViewData extends NavigatingActivity {
                     temp = (ImageButton)findViewById(R.id.btnTrash);
                     temp.setVisibility(View.VISIBLE);
 
-                    //for(CreateList c : adapter.galleryList) {
-                    //[hashmap]? of ___, chkbox pairs stored in myadapter, chkbox listener adds to hashmap
-                    //}
                     for(MyAdapter.ViewHolder view : adapter.imageViews) {
                         view.chkBox.setVisibility(View.VISIBLE);
                     }
@@ -104,15 +106,17 @@ public class ViewData extends NavigatingActivity {
 
         //for firebase storage
         mStorageRef = FirebaseStorage.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance();
+
     }
 
     /**
      * Populate the gallery with the images found in the directory.
-     * @return
+     * @return ArrayList of all image objects
      */
     private ArrayList<CreateList> prepareData(){
-
-        ArrayList<CreateList> theimage = new ArrayList<>();
+        TextView noImages = (TextView)findViewById(R.id.noImageText); 
+        ArrayList<CreateList> theImage = new ArrayList<>();
 
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/JPEG Images/";//specify path
         //System.out.println(path);
@@ -120,16 +124,18 @@ public class ViewData extends NavigatingActivity {
         File f = new File(path);
         File file[] = f.listFiles();
         try {
-            for (int i = 0; i < file.length; i++) {
+            for (File thisImage : file) {
                 CreateList createList = new CreateList();
-                createList.setImage_title(file[i].getName());
-                theimage.add(createList);
+                createList.setImage_title(thisImage.getName());
+                theImage.add(createList);
             }
         } catch (NullPointerException e) {
             System.out.println("Null list");
+            noImages.setVisibility(View.VISIBLE);
+            selText.setVisibility(View.GONE);
         }
 
-        return theimage;
+        return theImage;
     }
 
 
@@ -157,8 +163,6 @@ public class ViewData extends NavigatingActivity {
      */
     public void addData() {
         Intent intent = new Intent(this, BodySelect.class);
-        intent.putExtra("LOGGEDIN", loggedIn);
-        intent.putExtra("EMAIL", userEmail);
         startActivity(intent);
 
     }
@@ -178,42 +182,7 @@ public class ViewData extends NavigatingActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             // continue with delete
                             for (MyAdapter.ViewHolder view : adapter.selViews) {
-                                //delete raw image file
-                                String viewFile =view.filename.substring(4, view.filename.length()-3);
-                                String filename = "RAW" + viewFile+ "dng";
-                                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename);
-                                boolean deleted = file.delete();
-                                if(deleted) System.out.println("deleted: "+filename);
-                                //delete from firebase
-                                StorageReference fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename);
-                                fileRef.delete();
-
-                                //delete txt file
-                                filename = "RAW" + viewFile+ "txt";
-                                file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename);
-                                deleted = file.delete();
-                                if(deleted) System.out.println("deleted: "+filename);
-                                //delete from firebase
-                                fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename);
-                                fileRef.delete();
-
-                                //delete audio file
-                                filename = "RAW" + viewFile+ "3gpp";
-                                file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename);
-                                deleted = file.delete();
-                                if(deleted) System.out.println("deleted: "+filename);
-                                //delete from firebase
-                                fileRef = mStorageRef.child(userEmail+"/JPEG Images/"+filename);
-                                fileRef.delete();
-
-                                //delete jpg image file
-                                filename = "JPEG" + viewFile+ "jpg";
-                                file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/JPEG Images/"+filename);
-                                deleted = file.delete();
-                                if(deleted) System.out.println("deleted: "+filename);
-                                //delete from firebase
-                                fileRef = mStorageRef.child(userEmail+"/JPEG Images/"+filename);
-                                fileRef.delete();
+                                deleteFiles(view);
 
                             }
                             //make images not selectable
@@ -225,6 +194,9 @@ public class ViewData extends NavigatingActivity {
                                 view.chkBox.setVisibility(View.GONE);
                             }
                             adapter.selViews.clear();
+
+                            finish();
+                            startActivity(getIntent());
                         }
                     })
                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -239,6 +211,53 @@ public class ViewData extends NavigatingActivity {
     }
 
     /**
+     * Used to delete files from Firebase and locally
+     * @param view The ID of associated images/files to be deleted
+     */
+    private void deleteFiles(MyAdapter.ViewHolder view) {
+        //delete raw image file
+        String viewFile =view.filename.substring(4, view.filename.length()-3);
+        String filename = "RAW" + viewFile+ "dng";
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename);
+        boolean deleted = file.delete();
+        if(deleted) System.out.println("deleted: "+filename);
+        //delete from firebase
+        StorageReference fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename);
+        fileRef.delete();
+
+        //delete txt file
+        filename = "RAW" + viewFile+ "txt";
+        file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename);
+        deleted = file.delete();
+        if(deleted) System.out.println("deleted: "+filename);
+        //delete from firebase
+        fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename);
+        fileRef.delete();
+
+        //delete audio file
+        filename = "RAW" + viewFile+ "3gpp";
+        file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename);
+        deleted = file.delete();
+        if(deleted) System.out.println("deleted: "+filename);
+        //delete from firebase
+        fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename);
+        fileRef.delete();
+
+        //delete jpg image file
+        filename = "JPEG" + viewFile+ "jpg";
+        file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/JPEG Images/"+filename);
+        deleted = file.delete();
+        if(deleted) System.out.println("deleted: "+filename);
+        //delete from firebase
+        fileRef = mStorageRef.child(userEmail+"/JPEG Images/"+filename);
+        fileRef.delete();
+
+        //delete urls from database
+        DatabaseReference ref = mDatabase.getReference("Users/"+userEmail.replaceAll("\\.", ",")+"/"+viewFile);
+        ref.removeValue();
+    }
+
+    /**
      * This will upload all images that were selected. A confirmation box will appear before the
      * upload. Uploads both image files, and either txt/audio file associated with image.
      */
@@ -250,8 +269,6 @@ public class ViewData extends NavigatingActivity {
             final boolean useWifiOnly = sharedPreferences.getBoolean("pref_wifiOnly", false);
 
             final Intent settingsIntent = new Intent(this, SettingsActivity.class);
-            settingsIntent.putExtra("LOGGEDIN", loggedIn);
-            settingsIntent.putExtra("EMAIL", userEmail);
 
             builder.setTitle("Confirm Selection")
                     .setMessage("Are you sure you want to upload the selected?")
@@ -327,6 +344,9 @@ public class ViewData extends NavigatingActivity {
         String filename_txt = "RAW" + viewFile+"txt";
         String filename_aud = "RAW" + viewFile+"3gpp";
 
+        DatabaseReference ref = mDatabase.getReference("Users/"+userEmail.replaceAll("\\.", ",")+"/"+viewFile.substring(0, viewFile.length()-1));
+        Map<String, String> urlsToAdd= new HashMap<>();
+
         //Uri for uploading
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/";
         String path_jpg = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/JPEG Images/";
@@ -344,11 +364,14 @@ public class ViewData extends NavigatingActivity {
         fileRef = mStorageRef.child(userEmail+"/JPEG Images/"+filename_jpg);
         fileRef.putFile(file_jpg);
 
+        urlsToAdd.put("JPEG", fileRef.getDownloadUrl().toString());
+
         //raw file may not exist on some devices
         if(chk_raw.exists()) {
             fileRef = mStorageRef.child(userEmail + "/Raw Images/" + filename);
             fileRef.putFile(file);
 
+            urlsToAdd.put("Raw", fileRef.getDownloadUrl().toString());
         }
         //upload audio/text file if exists
         if(chk_txt.exists()) {
@@ -356,14 +379,18 @@ public class ViewData extends NavigatingActivity {
             fileRef.putFile(file_txt);
             //System.out.println("txt exists");
 
+            urlsToAdd.put("Txt", fileRef.getDownloadUrl().toString());
+
         } else if(chk_aud.exists()) {
             fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename_aud);
             fileRef.putFile(file_aud);
             //System.out.println("aud exists");
 
+            urlsToAdd.put("Aud", fileRef.getDownloadUrl().toString());
+
         }
-
-
+        //System.out.println("database key: "+viewFile.substring(0, viewFile.length()-1));
+        ref.setValue(urlsToAdd);
     }
 
 }

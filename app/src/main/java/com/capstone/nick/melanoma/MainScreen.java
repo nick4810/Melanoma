@@ -2,11 +2,13 @@ package com.capstone.nick.melanoma;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 
@@ -52,12 +54,10 @@ public class MainScreen extends NavigatingActivity implements
     private static final int RC_SIGN_IN = 9001;
 
     private GoogleApiClient mGoogleApiClient;
-    //private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
     private FirebaseAuth mAuth;
 
 
-    private boolean loggedIn = false;
     private boolean logMeOut = false;
     private boolean signMeIn = true;
     private String userEmail;
@@ -73,17 +73,17 @@ public class MainScreen extends NavigatingActivity implements
         setContentView(R.layout.activity_main_screen);
 
         if(getIntent().getExtras() !=null) {
-            loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
             logMeOut = getIntent().getExtras().getBoolean("LOGMEOUT");
             signMeIn = getIntent().getExtras().getBoolean("AUTOSIGN");
-            userEmail = getIntent().getExtras().getString("EMAIL");
         }
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        userEmail = prefs.getString("USEREMAIL", "");
 
         SignInButton signInButton = (SignInButton)findViewById(R.id.sign_in_button);
         signInButton.setStyle(SIZE_WIDE, COLOR_DARK);
 
 
-        super.onCreateDrawer(loggedIn, userEmail);
+        super.onCreateDrawer();
         mAuth = FirebaseAuth.getInstance();
 
         // Button listeners
@@ -121,8 +121,6 @@ public class MainScreen extends NavigatingActivity implements
                             public void onResult(@NonNull Status status) {
                                 if (status.isSuccess()) {
                                     Log.d(TAG, "User Logged out");
-                                    startActivity(intent);
-                                    finish();
                                 }
                             }
                         });
@@ -134,14 +132,21 @@ public class MainScreen extends NavigatingActivity implements
                     Log.d(TAG, "Google API Client Connection Suspended");
                 }
             });
+            SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+            prefEditor.putString("USEREMAIL", "");
+            prefEditor.putString("USERNAME", "");
+            prefEditor.apply();
+
+            startActivity(intent);
+            finish();
         }
     }
 
 
-    @Override
     /**
      * Google method to start a cached "silent" sign-in
      */
+    @Override
     public void onStart() {
         super.onStart();
 
@@ -169,19 +174,19 @@ public class MainScreen extends NavigatingActivity implements
         }
     }
 
-    @Override
     /**
      * Google method to resume sign-in process
      */
+    @Override
     protected void onResume() {
         super.onResume();
         hideProgressDialog();
     }
 
-    @Override
     /**
      * Google method called upon receiving sign-in result
      */
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -200,20 +205,23 @@ public class MainScreen extends NavigatingActivity implements
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
-            // Signed in successfully, show authenticated UI.
-            loggedIn=true;
-            super.onCreateDrawer(loggedIn, userEmail);
-            //mStatusTextView.setText(R.string.signed_in_fmt);
-            updateUI(true);
-            // Google Sign In was successful, authenticate with Firebase
+            // Signed in successfully
             GoogleSignInAccount account = result.getSignInAccount(); //account of logged in user
             userEmail = account.getEmail();
+            super.onCreateDrawer();
+
+            //set a preference for storing user's name, email
+            SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+            prefEditor.putString("USEREMAIL", userEmail);
+            prefEditor.putString("USERNAME", account.getGivenName()+" "+account.getFamilyName());
+            prefEditor.apply();
+
+            // Google Sign In was successful, authenticate with Firebase
             firebaseAuthWithGoogle(account);
 
         } else {
             // Signed out, show unauthenticated UI.
-            loggedIn=false;
-            super.onCreateDrawer(loggedIn, userEmail);
+            super.onCreateDrawer();
             updateUI(false);
         }
     }
@@ -290,7 +298,6 @@ public class MainScreen extends NavigatingActivity implements
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
                             String profilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/";
                             File chk_profile = new File(profilePath + "profile.txt");
                             if(!chk_profile.exists()) {
@@ -298,8 +305,6 @@ public class MainScreen extends NavigatingActivity implements
                                 buildProfile(acct, profilePath);
                             }
 
-                            intent.putExtra("LOGGEDIN", loggedIn);
-                            intent.putExtra("EMAIL", userEmail);
                             startActivity(intent);
 
                         } else {
@@ -312,20 +317,20 @@ public class MainScreen extends NavigatingActivity implements
     }
 
 
-    @Override
     /**
      * Connection failed when trying to sign in
      */
+    @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
     }
 
-    @Override
     /**
      * Stopping the sign-in process
      */
+    @Override
     protected void onStop() {
         super.onStop();
         if (mProgressDialog != null) {
@@ -369,12 +374,12 @@ public class MainScreen extends NavigatingActivity implements
         }
     }
 
-    @Override
     /**
      * When button pressed on this screen, currently used to start the Google sign-in process, or
      * swap to the new-user sign up page.
      * @param v is used to identify the button that was pressed
      */
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
@@ -382,7 +387,6 @@ public class MainScreen extends NavigatingActivity implements
                 break;
             case R.id.btn_newUser:
                 Intent intent = new Intent(this, NewUser.class);
-                intent.putExtra("LOGGEDIN", loggedIn);
                 startActivity(intent);
         }
     }

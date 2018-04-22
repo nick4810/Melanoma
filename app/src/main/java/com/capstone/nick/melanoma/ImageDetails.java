@@ -31,7 +31,6 @@ import java.io.IOException;
  * audio message.
  */
 public class ImageDetails extends NavigatingActivity {
-    private boolean loggedIn;
     private String userEmail;
     private String location;
 
@@ -56,13 +55,13 @@ public class ImageDetails extends NavigatingActivity {
     MediaPlayer mediaPlayer;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
 
-    @Override
     /**
      * On activity creation, a thumbnail of the image is shown, along with the date/time that the
      * image was taken. It also displays the body location that was previously selected, and gives
      * the user the option to change this via a dropdown box. Either a text box or audio buttons
      * will be displayed depending on the setting.
      */
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_details);
@@ -131,8 +130,8 @@ public class ImageDetails extends NavigatingActivity {
             });
         }
 
-        userEmail = getIntent().getExtras().getString("EMAIL");
-        loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        userEmail = prefs.getString("USEREMAIL", "");
         location = getIntent().getExtras().getString("LOCATION");
 
         filename = getIntent().getExtras().getString("FILE");
@@ -154,7 +153,7 @@ public class ImageDetails extends NavigatingActivity {
         filename+=".txt";//string for txt file
         date = getIntent().getExtras().getString("DATE");
         time = getIntent().getExtras().getString("TIME");
-        super.onCreateDrawer(loggedIn, userEmail);
+        super.onCreateDrawer();
 
         //set dropdown selection
         Spinner mySpinner = (Spinner)findViewById(R.id.img_location);
@@ -180,9 +179,6 @@ public class ImageDetails extends NavigatingActivity {
         }
 
         Intent intent = new Intent(this, ViewData.class);
-        intent.putExtra("LOGGEDIN", loggedIn);
-        intent.putExtra("EMAIL", userEmail);
-
         startActivity(intent);
     }
 
@@ -224,10 +220,10 @@ public class ImageDetails extends NavigatingActivity {
         }
     }
 
-    @Override
     /**
      * Used to request permissions for recording audio memos.
      */
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode){

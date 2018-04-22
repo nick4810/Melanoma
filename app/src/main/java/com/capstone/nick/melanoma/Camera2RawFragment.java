@@ -132,7 +132,6 @@ public class Camera2RawFragment extends Fragment
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
     private static String userEmail;
-    private static Boolean loggedIn;
     private static String location;
 
     private static String filename;
@@ -602,8 +601,6 @@ public class Camera2RawFragment extends Fragment
 
             final Intent intent = new Intent(getContext(), ImageDetails.class);
 
-            intent.putExtra("LOGGEDIN", loggedIn);
-            intent.putExtra("EMAIL", userEmail);
             intent.putExtra("LOCATION", location);
             intent.putExtra("FILE", filename);
             intent.putExtra("DATE", date);
@@ -654,14 +651,12 @@ public class Camera2RawFragment extends Fragment
     /**
      * A constructor method so that arguments can be passed.
      * @param email User's email address
-     * @param log If they are logged in or not
      * @param loc Body location that was selected
      * @return Returns fragment now that fields are set
      */
-    public static Camera2RawFragment newInstance(String email, Boolean log, String loc) {
+    public static Camera2RawFragment newInstance(String email, String loc) {
         Camera2RawFragment c = new Camera2RawFragment();
         userEmail = email;
-        loggedIn = log;
         location = loc;
 
 

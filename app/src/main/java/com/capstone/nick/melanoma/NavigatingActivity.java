@@ -1,48 +1,61 @@
 package com.capstone.nick.melanoma;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 /**
  * Class representing the navigation drawer. Opens/closes drawer, adds options to drawer, etc.
  */
 class NavigatingActivity extends AppCompatActivity {
     private NavigationView mDrawerList;
-    private String[] listOps;
-    private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private String mActivityTitle;
 
     private boolean loggedIn;
     private String email;
+    private String username;
 
     /**
      * Show the list of options based on whether user is logged in or not.
-     * @param userLogged status of log-in
-     * @param userEmail email address of user
      */
-    protected void onCreateDrawer(boolean userLogged, String userEmail) {
-        loggedIn = userLogged;
-        email = userEmail;
+    protected void onCreateDrawer() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        email = prefs.getString("USEREMAIL", "");
+        username = prefs.getString("USERNAME", "");
+        loggedIn = !email.equals("");
 
         mDrawerList = (NavigationView)findViewById(R.id.navList);
         mDrawerList.getMenu().clear();
+
         if(loggedIn){
             mDrawerList.inflateMenu(R.menu.navmenu_loggedin);
-            mDrawerList.inflateHeaderView(R.layout.drawer_header);
+
+            View hView =  mDrawerList.inflateHeaderView(R.layout.drawer_header);
+            TextView nameText = (TextView)hView.findViewById(R.id.drawer_name);
+            TextView emailText = (TextView)hView.findViewById(R.id.drawer_email);
+
+            try {
+                nameText.setText(username);//set the user's name in header
+                emailText.setText(email);//set the user's email in header
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
             mDrawerList.inflateMenu(R.menu.navmenu_loggedout);
-            //mDrawerList.inflateHeaderView(R.layout.drawer_header);
         }
+
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
 
@@ -90,8 +103,6 @@ class NavigatingActivity extends AppCompatActivity {
                                 intent = new Intent(NavigatingActivity.this, NewUser.class);
                             }
                         }
-                        intent.putExtra("LOGGEDIN", loggedIn);
-                        intent.putExtra("EMAIL", email);
                         startActivity(intent);
 
                         return true;

@@ -35,10 +35,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         this.context = context;
     }
 
-    @Override
     /**
      * When new image added, add to recyclerview for viewing and to total list of images.
      */
+    @Override
     public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_layout, viewGroup, false);
         ViewHolder temp = new ViewHolder(view);
@@ -46,10 +46,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return temp;
     }
 
-    @Override
     /**
      * Set the image title, thumbnail, onClickListeners
      */
+    @Override
     public void onBindViewHolder(final MyAdapter.ViewHolder viewHolder, int i) {
         String fileStr =galleryList.get(i).getImage_title();
         viewHolder.setFilename(fileStr);

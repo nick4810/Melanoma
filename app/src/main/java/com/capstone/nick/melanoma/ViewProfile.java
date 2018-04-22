@@ -1,10 +1,12 @@
 package com.capstone.nick.melanoma;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v7.preference.PreferenceManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -28,23 +30,20 @@ import java.io.File;
  * questionnaire was completed when they signed up, that data is displayed here.
  */
 public class ViewProfile extends NavigatingActivity  {
-    private boolean loggedIn;
     private String  userEmail;
     private StorageReference mStorageRef;
 
-    private boolean gotFile_firebase;
-
-    @Override
     /**
      * When activity created, all data pulled from profile.txt is displayed.
      */
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_profile);
 
-        userEmail = getIntent().getExtras().getString("EMAIL");
-        loggedIn = getIntent().getExtras().getBoolean("LOGGEDIN");
-        super.onCreateDrawer(loggedIn, userEmail);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        userEmail = prefs.getString("USEREMAIL", "");
+        super.onCreateDrawer();
 
         //populate fields with data found
         mStorageRef = FirebaseStorage.getInstance().getReference();
@@ -76,14 +75,12 @@ public class ViewProfile extends NavigatingActivity  {
             @Override
             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                 //downloaded file
-                gotFile_firebase =true;
                 //System.out.println("ViewProfile got profile from firebase");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 //failed to download file
-                gotFile_firebase =false;
                 //System.out.println("ViewProfile failed to get profile from firebase");
             }
         });

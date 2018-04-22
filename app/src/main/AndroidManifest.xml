@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -35,7 +35,8 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".MainScreen"
+        <activity
+            android:name=".MainScreen"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,33 +46,33 @@
         </activity>
         <activity
             android:name=".AddData"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_add_data" />
+            android:label="@string/title_activity_add_data"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ViewProfile"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_view_profile" />
+            android:label="@string/title_activity_view_profile"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ViewData"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_view_data" />
+            android:label="@string/title_activity_view_data"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".NewUser"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_new_user" />
+            android:label="@string/title_activity_new_user"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".BodySelect"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_body_select" />
+            android:label="@string/title_activity_body_select"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ImageDetails"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_image_details" />
+            android:label="@string/title_activity_image_details"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SettingsActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_preferences"
-            />
+            android:screenOrientation="portrait" />
+        <activity android:name=".ViewMoles"></activity>
     </application>
 
 </manifest>
