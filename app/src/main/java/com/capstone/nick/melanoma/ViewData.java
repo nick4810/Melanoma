@@ -11,6 +11,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,10 +19,14 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -194,6 +199,8 @@ public class ViewData extends NavigatingActivity {
                                 view.chkBox.setVisibility(View.GONE);
                             }
                             adapter.selViews.clear();
+                            //change text
+                            selText.setText("Select");
 
                             finish();
                             startActivity(getIntent());
@@ -253,7 +260,7 @@ public class ViewData extends NavigatingActivity {
         fileRef.delete();
 
         //delete urls from database
-        DatabaseReference ref = mDatabase.getReference("Users/"+userEmail.replaceAll("\\.", ",")+"/"+viewFile);
+        DatabaseReference ref = mDatabase.getReference("Users/"+userEmail.replaceAll("\\.", ",")+"/"+viewFile.substring(0, viewFile.length()-1));
         ref.removeValue();
     }
 
@@ -314,6 +321,8 @@ public class ViewData extends NavigatingActivity {
                             findViewById(R.id.btnUpload).setVisibility(View.GONE);
                             findViewById(R.id.btnTrash).setVisibility(View.GONE);
 
+                            //change text
+                            selText.setText("Select");
                             for (MyAdapter.ViewHolder view : adapter.imageViews) {
                                 view.chkBox.setChecked(false);
                                 view.chkBox.setVisibility(View.GONE);
@@ -344,8 +353,8 @@ public class ViewData extends NavigatingActivity {
         String filename_txt = "RAW" + viewFile+"txt";
         String filename_aud = "RAW" + viewFile+"3gpp";
 
-        DatabaseReference ref = mDatabase.getReference("Users/"+userEmail.replaceAll("\\.", ",")+"/"+viewFile.substring(0, viewFile.length()-1));
-        Map<String, String> urlsToAdd= new HashMap<>();
+        final DatabaseReference ref = mDatabase.getReference("Users/"+userEmail.replaceAll("\\.", ",")+"/"+viewFile.substring(0, viewFile.length()-1));
+        final Map<String, String> urlsToAdd= new HashMap<>();
 
         //Uri for uploading
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/";
@@ -359,38 +368,60 @@ public class ViewData extends NavigatingActivity {
         File chk_txt = new File(path + filename_txt);
         File chk_aud = new File(path + filename_aud);
 
-        //upload image files
-        StorageReference fileRef;
-        fileRef = mStorageRef.child(userEmail+"/JPEG Images/"+filename_jpg);
-        fileRef.putFile(file_jpg);
-
-        urlsToAdd.put("JPEG", fileRef.getDownloadUrl().toString());
 
         //raw file may not exist on some devices
         if(chk_raw.exists()) {
-            fileRef = mStorageRef.child(userEmail + "/Raw Images/" + filename);
-            fileRef.putFile(file);
+            final StorageReference rawRef = mStorageRef.child(userEmail + "/Raw Images/" + filename);
+            rawRef.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    urlsToAdd.put("Raw", taskSnapshot.getDownloadUrl().toString());
+                }
+            });
 
-            urlsToAdd.put("Raw", fileRef.getDownloadUrl().toString());
         }
         //upload audio/text file if exists
         if(chk_txt.exists()) {
-            fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename_txt);
-            fileRef.putFile(file_txt);
+            final StorageReference txtRef = mStorageRef.child(userEmail+"/Raw Images/"+filename_txt);
+            txtRef.putFile(file_txt).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    urlsToAdd.put("Txt", taskSnapshot.getDownloadUrl().toString());
+
+                }
+            });
             //System.out.println("txt exists");
 
-            urlsToAdd.put("Txt", fileRef.getDownloadUrl().toString());
 
         } else if(chk_aud.exists()) {
-            fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename_aud);
-            fileRef.putFile(file_aud);
+            final StorageReference audRef = mStorageRef.child(userEmail+"/Raw Images/"+filename_aud);
+            audRef.putFile(file_aud).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    urlsToAdd.put("Aud", taskSnapshot.getDownloadUrl().toString());
+
+                }
+            });
             //System.out.println("aud exists");
 
-            urlsToAdd.put("Aud", fileRef.getDownloadUrl().toString());
 
         }
+
+        //upload image files
+        final StorageReference fileRef;
+        fileRef = mStorageRef.child(userEmail+"/JPEG Images/"+filename_jpg);
+        fileRef.putFile(file_jpg).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                urlsToAdd.put("JPEG", taskSnapshot.getDownloadUrl().toString());
+            }
+        }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                ref.setValue(urlsToAdd);
+            }
+        });
         //System.out.println("database key: "+viewFile.substring(0, viewFile.length()-1));
-        ref.setValue(urlsToAdd);
     }
 
 }

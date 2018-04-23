@@ -23,6 +23,7 @@ import java.io.File;
 
 //TODO
 //check connection - then get profile from Firebase, otherwise locally
+//Give ability to change profile picture/header image
 
 /**
  * Activity to view the user's profile data. Displays information such as name, dob, ethnicity, etc.

@@ -14,6 +14,7 @@
     <string name="signed_out">Signed Out</string>
     <string name="signed_in_fmt">Successful Sign In</string>
     <string name="account_exists">Already have an account?</string>
+    <string name="account_signUp"><u>Create Account</u></string>
     <string name="account_new">New user? Just give us some basic information.</string>
     <string name="drawer_close">Closing Navigation Drawer</string>
     <string name="drawer_open">Opening Navigation Drawer</string>

@@ -6,8 +6,8 @@ android {
         applicationId "com.capstone.nick.melanoma"
         minSdkVersion 23
         targetSdkVersion 25
-        versionCode 3
-        versionName "1.1"
+        versionCode 5
+        versionName "1.11"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -34,6 +34,8 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:11.8.0'
     compile 'com.android.support:recyclerview-v7:25.4.0'
     compile 'com.android.support:preference-v7:25.4.0'
+
+    compile 'de.hdodenhof:circleimageview:2.1.0'
 
     testCompile 'junit:junit:4.12'
 }

@@ -15,15 +15,25 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="com.capstone.nick.melanoma.MainScreen">
 
+
+        <ImageView
+            android:id="@+id/image_taken"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="40dp"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@android:drawable/ic_menu_report_image" />
+
         <TextView
             android:id="@+id/welcomeMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="61dp"
             android:gravity="center"
-            android:paddingTop="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="25dp"
             android:text="Welcome"
-            android:textSize="18sp"/>
+            android:textColor="@color/text_BLK"
+            android:textSize="26sp"/>
 
         <TextView
             android:id="@+id/existingUser"
@@ -31,6 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:gravity="center"
+            android:textColor="@color/text_BLK"
             android:text="@string/account_exists"/>
 
         <com.google.android.gms.common.SignInButton
@@ -38,23 +49,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="20dp"
-            android:onClick="onClick"></com.google.android.gms.common.SignInButton>
+            android:layout_marginBottom="25dp"
+            android:onClick="onClick"/>
 
         <TextView
             android:id="@+id/newUser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="15dp"
             android:gravity="center"
+            android:textColor="@color/text_BLK"
             android:text="@string/account_new"/>
 
-        <Button
+        <TextView
             android:id="@+id/btn_newUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New User"
+            android:text="@string/account_signUp"
             android:layout_gravity="center_horizontal"
+            android:textColor="#0000FF"
             android:onClick="onClick"/>
 
     </LinearLayout>
