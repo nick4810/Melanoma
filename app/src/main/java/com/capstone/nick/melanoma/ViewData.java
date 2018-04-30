@@ -42,6 +42,7 @@ import static android.net.ConnectivityManager.TYPE_WIFI;
  */
 public class ViewData extends NavigatingActivity {
     private String userEmail;
+    private String patient_det;
 
     private TextView selText;
     private MyAdapter adapter;
@@ -64,6 +65,7 @@ public class ViewData extends NavigatingActivity {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         userEmail = prefs.getString("USEREMAIL", "");
+        patient_det = prefs.getString("PATIENTDETAILS", "");
         super.onCreateDrawer();
 
         //add an option to select images
@@ -99,14 +101,24 @@ public class ViewData extends NavigatingActivity {
                 }
             }
         });
+
+        ArrayList<CreateList> createLists = new ArrayList<>();
+        if(patient_det.equals("")) {
+            findViewById(R.id.noPatientText).setVisibility(View.VISIBLE);
+            selText.setVisibility(View.GONE);
+            findViewById(R.id.btnCam).setVisibility(View.GONE);
+        } else {
+            createLists = prepareData();
+        }
+
         //set up image gallery
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.imagegallery);
         recyclerView.setHasFixedSize(true);
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(),2);
         recyclerView.setLayoutManager(layoutManager);
-        ArrayList<CreateList> createLists = prepareData();
-        adapter = new MyAdapter(getApplicationContext(), createLists, userEmail);
+
+        adapter = new MyAdapter(getApplicationContext(), createLists, userEmail, patient_det);
         recyclerView.setAdapter(adapter);
 
         //for firebase storage
@@ -123,7 +135,7 @@ public class ViewData extends NavigatingActivity {
         TextView noImages = (TextView)findViewById(R.id.noImageText); 
         ArrayList<CreateList> theImage = new ArrayList<>();
 
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/JPEG Images/";//specify path
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/"+patient_det+"/JPEG Images/";//specify path
         //System.out.println(path);
 
         File f = new File(path);
@@ -222,45 +234,48 @@ public class ViewData extends NavigatingActivity {
      * @param view The ID of associated images/files to be deleted
      */
     private void deleteFiles(MyAdapter.ViewHolder view) {
+        String[] details = patient_det.split("_");
+        String patientID = details[0];
+
         //delete raw image file
         String viewFile =view.filename.substring(4, view.filename.length()-3);
         String filename = "RAW" + viewFile+ "dng";
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename);
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/"+patient_det+"/Raw Images/"+filename);
         boolean deleted = file.delete();
         if(deleted) System.out.println("deleted: "+filename);
         //delete from firebase
-        StorageReference fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename);
+        StorageReference fileRef = mStorageRef.child("Patients/"+patientID+"/Raw Images/"+filename);
         fileRef.delete();
 
         //delete txt file
         filename = "RAW" + viewFile+ "txt";
-        file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename);
+        file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/"+patient_det+"/Raw Images/"+filename);
         deleted = file.delete();
         if(deleted) System.out.println("deleted: "+filename);
         //delete from firebase
-        fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename);
+        fileRef = mStorageRef.child("Patients/"+patientID+"/Raw Images/"+filename);
         fileRef.delete();
 
         //delete audio file
         filename = "RAW" + viewFile+ "3gpp";
-        file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/"+filename);
+        file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/"+patient_det+"/Raw Images/"+filename);
         deleted = file.delete();
         if(deleted) System.out.println("deleted: "+filename);
         //delete from firebase
-        fileRef = mStorageRef.child(userEmail+"/Raw Images/"+filename);
+        fileRef = mStorageRef.child("Patients/"+patientID+"/Raw Images/"+filename);
         fileRef.delete();
 
         //delete jpg image file
         filename = "JPEG" + viewFile+ "jpg";
-        file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/JPEG Images/"+filename);
+        file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/"+patient_det+"/JPEG Images/"+filename);
         deleted = file.delete();
         if(deleted) System.out.println("deleted: "+filename);
         //delete from firebase
-        fileRef = mStorageRef.child(userEmail+"/JPEG Images/"+filename);
+        fileRef = mStorageRef.child("Patients/"+patientID+"/Images/JPEG Images/"+filename);
         fileRef.delete();
 
         //delete urls from database
-        DatabaseReference ref = mDatabase.getReference("Users/"+userEmail.replaceAll("\\.", ",")+"/"+viewFile.substring(0, viewFile.length()-1));
+        DatabaseReference ref = mDatabase.getReference("Patients/"+patientID+"/Images/"+viewFile.substring(0, viewFile.length()-1));
         ref.removeValue();
     }
 
@@ -346,6 +361,8 @@ public class ViewData extends NavigatingActivity {
      * @param view This is the image object
      */
     private void uploadToFirebase(MyAdapter.ViewHolder view) {
+        String[] details = patient_det.split("_");
+        String patientID = details[0];
         //filenames
         String viewFile =view.filename.substring(4, view.filename.length()-3);
         String filename = "RAW" + viewFile+"dng";
@@ -353,12 +370,12 @@ public class ViewData extends NavigatingActivity {
         String filename_txt = "RAW" + viewFile+"txt";
         String filename_aud = "RAW" + viewFile+"3gpp";
 
-        final DatabaseReference ref = mDatabase.getReference("Users/"+userEmail.replaceAll("\\.", ",")+"/"+viewFile.substring(0, viewFile.length()-1));
+        final DatabaseReference ref = mDatabase.getReference("Patients/"+patientID+"/Images/"+viewFile.substring(0, viewFile.length()-1));
         final Map<String, String> urlsToAdd= new HashMap<>();
 
         //Uri for uploading
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/";
-        String path_jpg = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/JPEG Images/";
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/"+patient_det+"/Raw Images/";
+        String path_jpg = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/"+patient_det+"/JPEG Images/";
         final Uri file = Uri.fromFile(new File(path+filename));
         final Uri file_jpg = Uri.fromFile(new File(path_jpg+filename_jpg));
         final Uri file_txt = Uri.fromFile(new File(path+filename_txt));
@@ -371,7 +388,7 @@ public class ViewData extends NavigatingActivity {
 
         //raw file may not exist on some devices
         if(chk_raw.exists()) {
-            final StorageReference rawRef = mStorageRef.child(userEmail + "/Raw Images/" + filename);
+            final StorageReference rawRef = mStorageRef.child("Patients/"+patientID+"/Raw Images/" + filename);
             rawRef.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -382,7 +399,7 @@ public class ViewData extends NavigatingActivity {
         }
         //upload audio/text file if exists
         if(chk_txt.exists()) {
-            final StorageReference txtRef = mStorageRef.child(userEmail+"/Raw Images/"+filename_txt);
+            final StorageReference txtRef = mStorageRef.child("Patients/"+patientID+"/Raw Images/"+filename_txt);
             txtRef.putFile(file_txt).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -394,7 +411,7 @@ public class ViewData extends NavigatingActivity {
 
 
         } else if(chk_aud.exists()) {
-            final StorageReference audRef = mStorageRef.child(userEmail+"/Raw Images/"+filename_aud);
+            final StorageReference audRef = mStorageRef.child("Patients/"+patientID+"/Raw Images/"+filename_aud);
             audRef.putFile(file_aud).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -409,7 +426,7 @@ public class ViewData extends NavigatingActivity {
 
         //upload image files
         final StorageReference fileRef;
-        fileRef = mStorageRef.child(userEmail+"/JPEG Images/"+filename_jpg);
+        fileRef = mStorageRef.child("Patients/"+patientID+"/JPEG Images/"+filename_jpg);
         fileRef.putFile(file_jpg).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

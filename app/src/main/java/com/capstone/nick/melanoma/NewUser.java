@@ -154,6 +154,16 @@ public class NewUser extends NavigatingActivity implements
         data+="\nEmail: ";
         data+= account.getEmail();
 
+        data+="\nSpecialty: ";
+        EditText temp = (EditText)findViewById(R.id.newUser_spec);
+        data+= temp.getText().toString();
+        data+="\nMedical ID: ";
+        temp = (EditText)findViewById(R.id.newUser_medID);
+        data+= temp.getText().toString();
+        data+="\nCountry: ";
+        temp = (EditText)findViewById(R.id.newUser_country);
+        data+= temp.getText().toString();
+
         //get data from radio buttons
         data+="\nSex: ";
         RadioGroup radioButtonGroup = (RadioGroup)findViewById(R.id.newUser_gend);
@@ -167,7 +177,7 @@ public class NewUser extends NavigatingActivity implements
         }
 
         data+="\nDate of Birth: ";
-        EditText temp = (EditText)findViewById(R.id.newUser_dob);
+        temp = (EditText)findViewById(R.id.newUser_dob);
         data+= temp.getText().toString();
 
         data+="\nEthnicity: ";
@@ -180,6 +190,10 @@ public class NewUser extends NavigatingActivity implements
             RadioButton r = (RadioButton) radioButtonGroup.getChildAt(idx);
             data+= r.getText().toString();
         }
+        data+="\nNotes: ";
+        temp = (EditText)findViewById(R.id.newUser_notes);
+        data+= temp.getText().toString();
+
         //System.out.println(data);
         //save file
         saver.saveToFile(path, "profile.txt", data);
@@ -188,7 +202,7 @@ public class NewUser extends NavigatingActivity implements
         //upload to firebase
         fileRef.putFile(file);
 
-        Intent intent = new Intent(this, ViewData.class);
+        Intent intent = new Intent(this, AllPatients.class);
         startActivity(intent);
     }
 

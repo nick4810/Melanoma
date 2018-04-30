@@ -84,34 +84,21 @@ public class SettingsActivity extends NavigatingActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         //go through with deletion
                         final File deleteDir = new File(path);
+                        /* Notice:
+                           Deleting an account does not currently delete the photos locally or from
+                           Firebase in order to save the patient data
+                         */
                         //delete local data
-                        deleteRecursive(deleteDir);
+                        //deleteRecursive(deleteDir);
                         //delete firebase storage data
-                        final String rawDir = "Raw Images";
-                        final String jpgDir = "JPEG Images";
-                        deleteFromFirebase();
+                        //deleteFromFirebase();
 
                         //delete database entries
                         DatabaseReference ref = mDatabase.getReference("Users/"+userEmail.replaceAll("\\.", ","));
                         ref.removeValue();
 
-                        StorageReference fileRef = mStorageRef.child(userEmail + "/"+rawDir);
-                        try {//delete raw parent directory
-                            System.out.println("Attempt delete of: "+fileRef.toString());
-                            fileRef.delete();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        fileRef = mStorageRef.child(userEmail + "/profile.txt");
+                        StorageReference fileRef = mStorageRef.child(userEmail + "/profile.txt");
                         try {//delete profile txt file
-                            fileRef.delete();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        fileRef = mStorageRef.child(userEmail + "/"+jpgDir);
-                        try {//delete jpg parent directory
                             System.out.println("Attempt delete of: "+fileRef.toString());
                             fileRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

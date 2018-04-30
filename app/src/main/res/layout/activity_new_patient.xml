@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:background="@color/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.capstone.nick.melanoma.NewPatient">
+    <!-- The main content view -->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:textSize="18sp"
+                android:textColor="@color/text_BLK"
+                android:text="First Name" />
+
+            <EditText
+                android:id="@+id/newUser_Fname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:ems="10"
+                tools:layout_editor_absoluteX="39dp"
+                tools:layout_editor_absoluteY="120dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:textSize="18sp"
+                android:textColor="@color/text_BLK"
+                android:text="Last Name" />
+
+            <EditText
+                android:id="@+id/newUser_Lname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:ems="10"
+                tools:layout_editor_absoluteX="39dp"
+                tools:layout_editor_absoluteY="120dp" />
+        </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="11dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/text_BLK"
+                    android:text="Date Of Birth" />
+
+                <EditText
+                    android:id="@+id/newUser_dob"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:ems="10"
+                    android:inputType="date"
+                    tools:layout_editor_absoluteX="39dp"
+                    tools:layout_editor_absoluteY="120dp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="Gender"
+                    android:textSize="18sp"
+                    android:textColor="@color/text_BLK"/>
+
+                <RadioGroup
+                    android:id="@+id/newUser_gend"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="15dp">
+
+                    <RadioButton
+                        android:id="@+id/radioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Male"
+                        tools:layout_editor_absoluteX="55dp"
+                        tools:layout_editor_absoluteY="194dp" />
+                    <RadioButton
+                        android:id="@+id/radioButton2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Female"
+                        tools:layout_editor_absoluteX="153dp"
+                        tools:layout_editor_absoluteY="194dp" />
+                </RadioGroup>
+            </LinearLayout>
+
+
+
+            <RadioGroup
+                android:id="@+id/newUser_eth"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="20dp">
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/text_BLK"
+                    android:text="Ethnicity"
+                    android:layout_marginBottom="8dp"
+                    tools:layout_editor_absoluteX="38dp"
+                    tools:layout_editor_absoluteY="246dp" />
+                <RadioButton
+                    android:id="@+id/radioButton3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Caucasian/White"
+                    tools:layout_editor_absoluteX="38dp"
+                    tools:layout_editor_absoluteY="279dp" />
+
+                <RadioButton
+                    android:id="@+id/radioButton4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="African American/Black"
+                    tools:layout_editor_absoluteX="31dp"
+                    tools:layout_editor_absoluteY="320dp" />
+
+                <RadioButton
+                    android:id="@+id/radioButton5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Asian"
+                    tools:layout_editor_absoluteX="163dp"
+                    tools:layout_editor_absoluteY="279dp" />
+
+                <RadioButton
+                    android:id="@+id/radioButton6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hispanic"
+                    tools:layout_editor_absoluteX="163dp"
+                    tools:layout_editor_absoluteY="279dp" />
+
+                <RadioButton
+                    android:id="@+id/radioButton7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Prefer Not To Answer"
+                    tools:layout_editor_absoluteX="163dp"
+                    tools:layout_editor_absoluteY="279dp" />
+
+                <RadioButton
+                    android:id="@+id/radioButton8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Other"
+                    tools:layout_editor_absoluteX="163dp"
+                    tools:layout_editor_absoluteY="279dp" />
+            </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:textSize="18sp"
+                android:textColor="@color/text_BLK"
+                android:text="Height" />
+
+            <EditText
+                android:id="@+id/edit_height"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:ems="10"
+                tools:layout_editor_absoluteX="39dp"
+                tools:layout_editor_absoluteY="120dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:textSize="18sp"
+                android:textColor="@color/text_BLK"
+                android:text="In." />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:textSize="18sp"
+                android:textColor="@color/text_BLK"
+                android:text="Weight" />
+
+            <EditText
+                android:id="@+id/edit_weight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:ems="10"
+                tools:layout_editor_absoluteX="39dp"
+                tools:layout_editor_absoluteY="120dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:textSize="18sp"
+                android:textColor="@color/text_BLK"
+                android:text="Lbs." />
+        </LinearLayout>
+
+            <EditText
+                android:id="@+id/newUser_notes"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginTop="20dp"
+                android:ems="8"
+                android:maxLength="350"
+                android:text="Include any other info here"
+                android:textSize="14sp"
+                android:inputType="textMultiLine"
+                tools:layout_editor_absoluteX="40dp"
+                tools:layout_editor_absoluteY="365dp" />
+
+            <Button
+                android:id="@+id/newPatient"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:onClick="onClick"
+                android:layout_gravity="center_horizontal"
+                android:text="Add User"/>
+
+
+        </LinearLayout>
+    </ScrollView>
+    <!-- Put what you want as your normal screen in here, you can also choose for a linear layout or any other layout, whatever you prefer -->
+
+    <!-- The navigation drawer -->
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navList"
+        android:layout_width="215dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#ffeeeeee"/>
+</android.support.v4.widget.DrawerLayout>
+
+
+
+
+

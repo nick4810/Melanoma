@@ -3,11 +3,14 @@
 
     <string name="title_activity_view_profile">Your Profile</string>
     <string name="title_activity_body_select">Select Location</string>
-    <string name="title_activity_view_data">Your Images</string>
+    <string name="title_activity_view_data">Patient Images</string>
     <string name="title_activity_new_user">New User Data</string>
     <string name="title_activity_image_details">Image Details</string>
     <string name="title_activity_add_data">Add a Picture</string>
     <string name="title_activity_preferences">Your Settings</string>
+    <string name="title_activity_add_new_patient">Add New Patient</string>
+    <string name="title_activity_patient_details">Patient Details</string>
+    <string name="title_activity_all_patients">All Patients</string>
 
     <!-- Strings related to login -->
     <string name="loading">Loading</string>
@@ -18,6 +21,8 @@
     <string name="account_new">New user? Just give us some basic information.</string>
     <string name="drawer_close">Closing Navigation Drawer</string>
     <string name="drawer_open">Opening Navigation Drawer</string>
+
+    <string name="patientSearch_hint">Enter Patient Name or ID</string>
 
     <array name="loggedInList">
         <item>Home</item>

@@ -3,7 +3,14 @@ package com.capstone.nick.melanoma;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,7 +19,11 @@ import android.support.v7.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.io.File;
 
 /**
  * Class representing the navigation drawer. Opens/closes drawer, adds options to drawer, etc.
@@ -43,8 +54,27 @@ class NavigatingActivity extends AppCompatActivity {
             mDrawerList.inflateMenu(R.menu.navmenu_loggedin);
 
             View hView =  mDrawerList.inflateHeaderView(R.layout.drawer_header);
+            LinearLayout drawer_lay = (LinearLayout)hView.findViewById(R.id.header_linLay);
+            ImageView prof_img = (ImageView)hView.findViewById(R.id.img_profile);
             TextView nameText = (TextView)hView.findViewById(R.id.drawer_name);
             TextView emailText = (TextView)hView.findViewById(R.id.drawer_email);
+
+            //change the profile picture/header if user has them set
+            String profPath =android.os.Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DCIM).toString() + "/" + email + "/profile.jpg";
+            String headPath =android.os.Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DCIM).toString() + "/" + email + "/header.jpg";
+            File chk_prof = new File(profPath);
+            File chk_head = new File(headPath);
+
+            if(chk_prof.exists()) {
+                prof_img.setImageBitmap(decodeSampledBitmapFromResource(profPath, 75, 75));
+            }
+            if(chk_head.exists()) {
+                Drawable hImg = new BitmapDrawable(getResources(), decodeSampledBitmapFromResource(headPath, 215, 145));
+                drawer_lay.setBackground(hImg);
+                //drawer_lay.setImageBitmap(decodeSampledBitmapFromResource(headPath, 75, 75));
+            }
 
             try {
                 nameText.setText(username);//set the user's name in header
@@ -90,6 +120,8 @@ class NavigatingActivity extends AppCompatActivity {
                                 intent = new Intent(NavigatingActivity.this, ViewProfile.class);
                             } else if(menuItem.getItemId() == R.id.nav_myData) {
                                 intent = new Intent(NavigatingActivity.this, ViewData.class);
+                            } else if(menuItem.getItemId() == R.id.nav_allPatients) {
+                                intent = new Intent(NavigatingActivity.this, AllPatients.class);
                             } else if(menuItem.getItemId() == R.id.nav_settings) {
                                 intent = new Intent(NavigatingActivity.this, SettingsActivity.class);
                             } else if(menuItem.getItemId() == R.id.nav_logOut) {
@@ -149,5 +181,55 @@ class NavigatingActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    /**
+     * Used to create thumbnails for images
+     * @param path Image file directory
+     * @param reqWidth Requested width of thumbnail
+     * @param reqHeight Requested height of thumbnail
+     * @return Bitmap for thumbnail
+     */
+    private Bitmap decodeSampledBitmapFromResource(String path, int reqWidth, int reqHeight) {
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(path, options);
+    }
+
+    /**
+     * Finds the largest number to divide by while still keeping requested width/height
+     * @param options Options for creating Bitmap
+     * @param reqWidth Requested width of thumbnail
+     * @param reqHeight Requested height of thumbnail
+     * @return Largest value for creating smallest thumbnail
+     */
+    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 }

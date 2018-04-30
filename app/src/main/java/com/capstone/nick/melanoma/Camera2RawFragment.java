@@ -132,6 +132,7 @@ public class Camera2RawFragment extends Fragment
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
     private static String userEmail;
+    private static String patient_det;
     private static String location;
 
     private static String filename;
@@ -531,9 +532,9 @@ public class Camera2RawFragment extends Fragment
 
             //create directories for jpeg and raw photos
             File storageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-            File mGalleryFolder = new File(storageDirectory, userEmail);
+            File mGalleryFolder = new File(storageDirectory, userEmail+"/"+patient_det+"/");
             mGalleryFolder = new File(mGalleryFolder, "JPEG Images");
-            File mRawGalleryFolder = new File(storageDirectory, userEmail);
+            File mRawGalleryFolder = new File(storageDirectory, userEmail+"/"+patient_det+"/");
             mRawGalleryFolder = new File(mRawGalleryFolder, "Raw Images");
 
 
@@ -654,9 +655,10 @@ public class Camera2RawFragment extends Fragment
      * @param loc Body location that was selected
      * @return Returns fragment now that fields are set
      */
-    public static Camera2RawFragment newInstance(String email, String loc) {
+    public static Camera2RawFragment newInstance(String email, String det, String loc) {
         Camera2RawFragment c = new Camera2RawFragment();
         userEmail = email;
+        patient_det = det;
         location = loc;
 
 

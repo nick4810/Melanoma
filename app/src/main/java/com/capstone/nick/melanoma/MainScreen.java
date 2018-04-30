@@ -135,6 +135,7 @@ public class MainScreen extends NavigatingActivity implements
             SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
             prefEditor.putString("USEREMAIL", "");
             prefEditor.putString("USERNAME", "");
+            prefEditor.putString("PATIENTDETAILS", "");
             prefEditor.apply();
 
             startActivity(intent);
@@ -288,7 +289,7 @@ public class MainScreen extends NavigatingActivity implements
     private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
-        final Intent intent = new Intent(this, ViewData.class);
+        final Intent intent = new Intent(this, AllPatients.class);
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)

@@ -32,6 +32,7 @@ import java.io.IOException;
  */
 public class ImageDetails extends NavigatingActivity {
     private String userEmail;
+    private String patient_det;
     private String location;
 
     private String filename;
@@ -43,7 +44,6 @@ public class ImageDetails extends NavigatingActivity {
     private ImageButton recordingButton;
     private ImageButton stopButton;
     private ImageButton playButton;
-    private Button matchButton;
 
     // Requesting permission to RECORD_AUDIO
     private boolean permissionToRecordAccepted = false;
@@ -66,8 +66,30 @@ public class ImageDetails extends NavigatingActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_details);
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        useAudioMemo = sharedPreferences.getBoolean("pref_audio", false);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        userEmail = prefs.getString("USEREMAIL", "");
+        patient_det = prefs.getString("PATIENTDETAILS", "");
+
+        String[] fileDet =patient_det.split("_");
+
+        String pID ="";
+        String pName ="";
+        try {
+            //directory name is [patientID]_[patientName]
+            pID =fileDet[0];
+            pName =fileDet[1];
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //set the fields displayed to the patient's data
+        EditText editPat = (EditText)findViewById(R.id.patient_name);
+        editPat.setText(pName);
+        editPat.setEnabled(false);
+        editPat = (EditText)findViewById(R.id.patient_ID);
+        editPat.setText(pID);
+        editPat.setEnabled(false);
+
+        useAudioMemo = prefs.getBoolean("pref_audio", false);
         if(useAudioMemo) {//wants to use audio memos, not textual
             //hide text box
             findViewById(R.id.img_notes).setVisibility(View.GONE);
@@ -130,12 +152,10 @@ public class ImageDetails extends NavigatingActivity {
             });
         }
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        userEmail = prefs.getString("USEREMAIL", "");
         location = getIntent().getExtras().getString("LOCATION");
 
         filename = getIntent().getExtras().getString("FILE");
-        path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/";
+        path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/"+patient_det+"/";
         voiceStoragePath = path + "Raw Images/";
         path+="JPEG Images/";
 
@@ -198,7 +218,7 @@ public class ImageDetails extends NavigatingActivity {
     private void saveTextFile() {
         FileHandler saver = new FileHandler();
         String data = "";
-        path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/Raw Images/";
+        path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/"+patient_det+"/Raw Images/";
 
         //gather data entered
         data+="Date: ";

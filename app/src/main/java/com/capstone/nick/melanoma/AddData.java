@@ -28,6 +28,7 @@ import android.support.v7.preference.PreferenceManager;
 public class AddData extends Activity {
     private String userEmail;
     private String location;
+    private String patient_det;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +37,12 @@ public class AddData extends Activity {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         userEmail = prefs.getString("USEREMAIL", "");
+        patient_det = prefs.getString("PATIENTDETAILS", "");
         location = getIntent().getExtras().getString("LOCATION");
+
         if (null == savedInstanceState) {
             getFragmentManager().beginTransaction()
-                    .replace(R.id.container, Camera2RawFragment.newInstance(userEmail, location))
+                    .replace(R.id.container, Camera2RawFragment.newInstance(userEmail, patient_det, location))
                     .commit();
         }
     }

@@ -1,42 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="#87ADFE"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:id="@+id/header_linLay"
+        android:layout_height="145dp"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:background="#87ADFE"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/img_profile"
-        android:layout_marginTop="16dp"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_marginStart="16dp"
-        android:src="@drawable/default_logo"
-        app:civ_border_color="@color/colorPrimary"
-        app:civ_border_width="1dp"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_profile"
+            android:layout_marginTop="16dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/default_logo"
+            app:civ_border_color="@color/colorPrimary"
+            app:civ_border_width="1dp"
         />
 
-    <TextView
-        android:id="@+id/drawer_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="16dp"
-        android:textColor="@color/text_BLK"
-        android:textSize="14sp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textStyle="bold"
-    />
-    <TextView
-        android:id="@+id/drawer_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="8dp"
-        android:textColor="@color/text_BLK"
-        android:textSize="14sp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        <TextView
+            android:id="@+id/drawer_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="16dp"
+            android:textColor="@color/text_BLK"
+            android:textSize="14sp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textStyle="bold"
         />
+        <TextView
+            android:id="@+id/drawer_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/text_BLK"
+            android:textSize="14sp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            />
     </LinearLayout>
+</FrameLayout>

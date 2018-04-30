@@ -39,6 +39,17 @@ tools:context="com.capstone.nick.melanoma.ViewData">
             android:visibility="gone"
             android:gravity="center_horizontal"/>
 
+        <TextView
+            android:id="@+id/noPatientText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="75dp"
+            app:layout_constraintTop_toBottomOf="parent"
+            android:textSize="22sp"
+            android:visibility="gone"
+            android:text="No Patient Selected"
+            android:gravity="center_horizontal"/>
+
         <ImageButton
             android:id="@+id/btnCam"
             android:layout_width="wrap_content"

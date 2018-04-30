@@ -15,6 +15,10 @@
             android:id="@+id/nav_myData"
             android:icon="@drawable/ic_list_black_24dp"
             android:title="Gallery"/>
+        <item
+            android:id="@+id/nav_allPatients"
+            android:icon="@drawable/ic_people_outline_black_24dp"
+            android:title="Patients"/>
     </group>
 
     <group android:checkableBehavior="single"

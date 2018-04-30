@@ -72,7 +72,17 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_preferences"
             android:screenOrientation="portrait" />
-        <activity android:name=".ViewMoles"></activity>
+        <activity android:name=".ViewMoles"
+            android:screenOrientation="portrait" />
+        <activity android:name=".NewPatient"
+            android:label="@string/title_activity_add_new_patient"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ViewPatient"
+            android:label="@string/title_activity_patient_details"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".AllPatients"
+            android:label="@string/title_activity_all_patients"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

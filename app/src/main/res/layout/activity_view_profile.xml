@@ -24,6 +24,7 @@
             <ImageView
                 android:id="@+id/img_profileHeader"
                 android:layout_width="match_parent"
+                android:onClick="onClick"
                 android:layout_height="135dp"
                 android:background="#87ADFE"/>
 
@@ -32,6 +33,7 @@
                 android:layout_width="125dp"
                 android:layout_height="125dp"
                 android:layout_gravity="center"
+                android:onClick="onClick"
                 android:src="@drawable/default_logo"
                 app:civ_border_color="@color/colorPrimary"
                 app:civ_border_width="1dp"
@@ -68,6 +70,73 @@
             android:inputType="textEmailAddress"
             android:text="Email"
             android:textColor="#a3a8af"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/text_BLK"
+                android:text="Country" />
+
+
+            <EditText
+                android:id="@+id/editCountry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:ems="10" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/text_BLK"
+                android:text="Specialty" />
+
+
+            <EditText
+                android:id="@+id/editSpec"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:ems="10"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/text_BLK"
+                android:text="Medical ID" />
+
+
+            <EditText
+                android:id="@+id/edit_medID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:ems="10"/>
+        </LinearLayout>
 
 
         <RadioGroup

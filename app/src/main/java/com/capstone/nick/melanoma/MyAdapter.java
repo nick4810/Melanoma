@@ -28,11 +28,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private Context context;
 
     private String userEmail;
+    private String patient_det;
 
-    public MyAdapter(Context context, ArrayList<CreateList> galleryList, String email) {
+    public MyAdapter(Context context, ArrayList<CreateList> galleryList, String email, String det) {
         this.userEmail = email;
         this.galleryList = galleryList;
         this.context = context;
+        this.patient_det = det;
     }
 
     /**
@@ -43,6 +45,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_layout, viewGroup, false);
         ViewHolder temp = new ViewHolder(view);
         imageViews.add(temp);//add to list of all images
+
         return temp;
     }
 
@@ -66,7 +69,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         viewHolder.title.setText(newTitle);//set imageview title
 
         viewHolder.img.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/JPEG Images/";
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+"/"+userEmail+"/"+patient_det+"/JPEG Images/";
         path+=fileStr;
         //set thumbnail into imageview
         viewHolder.img.setImageBitmap(decodeSampledBitmapFromResource(path, 150, 150));
